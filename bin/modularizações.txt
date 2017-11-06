@@ -1,0 +1,4 @@
+MODULARIZAÇÕES:
+leitura
+processamento
+saida
