@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "leitura.h"
+#include "read.h"
 
 int main(int argc, char const *argv[])
 {
 	FILE *image;
 	image = fopen("../res/Catarata.ppm", "r");
-	int height, weight;
-	readImage(image, &height, &weight);
+	int height, width;
+	readImage(image, &height, &width);
 
 	return 0;
 }
