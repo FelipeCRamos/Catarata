@@ -6,8 +6,10 @@ int main(int argc, char const *argv[])
 {
 	FILE *image;
 	image = fopen("../res/Catarata.ppm", "r");
-	int height, width;
-	readImage(image, &height, &width);
+
+  if (image == NULL) perror("Error opening file");
+
+	readImage("../red/Catarata.ppm");
 
 	return 0;
 }
