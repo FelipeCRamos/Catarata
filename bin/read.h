@@ -14,15 +14,13 @@ typedef struct Pixel_t
 	int b; // blue
 } Pixel;
 
-typedef struct ImgHeader_t
+typedef struct Img_t
 {
   int height;
   int width;
   Pixel *pixels;
-} ImgHeader;
+} Img;
 
-char *stripFileName(char *filename);
-
-void readImage(char *imgName);
+Img *readImage(char *imgName);
 
 #endif

@@ -11,5 +11,6 @@ int main(int argc, char const *argv[])
 
 	readImage("../red/Catarata.ppm");
 
+  fclose(image);
 	return 0;
 }
