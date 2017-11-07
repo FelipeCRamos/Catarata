@@ -1,4 +1,7 @@
-MODULARIZAÇÕES:
-leitura
-processamento
-saida
+Modules:
+-> Read:
+	This module is responsable for reading the .ppm image, so the program can work into it.
+-> Write:
+	This one is where every function of write is.
+-> Process:
+	The various processes with the image are stored here.
