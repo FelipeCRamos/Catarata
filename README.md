@@ -1,9 +1,9 @@
 ## Projeto de ITP - 2017.2
-### Software para Diagnóstico de Catarata
+### Software de Diagnóstico de Catarata
 
 Alunos envolvidos no projeto:
-- Felipe Ramos
-- João Pedro Amorim
+- Felipe C. Ramos Filho
+- João Pedro de A. Paula
 
 ### Informações sobre o projeto
 Neste projeto, iremos implementar um programa em C para analisar 4 imagens (duas com catarata e duas sem catarata) e emitir um diagnóstico de cada uma.
@@ -23,3 +23,16 @@ O **filtro gaussiano** é um dos mais comuns em processamento digital de imagens
 ![matrix](res/matrix.png)  
 
 **Realce de Arestas** é um processo de realce de arestas na imagem. Esse processo recebe como entrada uma imagem e produz como saída outra imagem, porém contendo apenas os contornos da imagem original, em preto e branco. Para muitos procedimentos que precisam da detecção de figuras geométricas, como círculos, no nosso caso, é necessário o uso de imagens que contenham apenas os contornos das figuras na imagem ao invés dos valores de todos os pixels em RGB. Para tal é necessário realizar uma série de procedimentos a fim de garantir a detecção dos contornos com a melhor qualidade possível.
+
+# English
+
+### Cataract Diagnosis Software
+
+Students involved in the project:
+- Felipe C. Ramos Filho
+- João Pedro de A. Paula
+
+### Informations about the project
+In this project we have to implement a C program to analyse four images (two
+with cataract and two without) and emit a diagnosis of each one of the images.
+The project will be implemented in the following steps:

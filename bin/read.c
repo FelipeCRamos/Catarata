@@ -14,8 +14,6 @@ Img *readImage(char *imgName)
   short n = 0;
   while (imgName[m] != '/') {
     strippedImgName[n] = imgName[m];
-    printf("%s", strippedImgName);
-    printf("m: %i, n: %i\n", m, n);
     --m;
     ++n;
   }
@@ -90,6 +88,7 @@ Img *readImage(char *imgName)
     pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
   }
 
+  // check if the pixel matrix is null
   if (!pixels) {
     fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedImgName);
   }
