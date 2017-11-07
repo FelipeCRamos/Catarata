@@ -19,7 +19,7 @@ Img *readImage(char *imgName)
   }
   strippedImgName[n] = '\0';
 
-  // here we have to invert the string because it is reversed (Catarata is atarataC)
+  // here we have to invert the string because it is reversed (Catarata.ppm is mpp.atarataC)
   for (int i = 0, j = n - 1; i < j; ++i, --j) {
     char aux = strippedImgName[i];
     strippedImgName[i] = strippedImgName[j];
@@ -91,6 +91,9 @@ Img *readImage(char *imgName)
   // check if the pixel matrix is null
   if (!pixels) {
     fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedImgName);
+    fclose(image);
+    free(img);
+    return NULL;
   }
 
   fclose(image);
