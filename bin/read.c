@@ -90,6 +90,10 @@ Img *readImage(char *imgName)
     pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
   }
 
+  if (!pixels) {
+    fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedImgName);
+  }
+
   fclose(image);
   return img;
 }
