@@ -44,6 +44,7 @@ obtida através de uma função gaussiana 2D. Para o nosso caso, usaremos os
 valores para *F* como mostrados na Figura 1, abaixo:
 
 ![matrix](res/matrix.png)
+*Figura 1: Exemplo da matriz*
 
 **Realce de Arestas** é um processo de realce de arestas na imagem. Esse 
 processo recebe como entrada uma imagem e produz como saída outra imagem, porém
@@ -80,7 +81,7 @@ processing is made. In general, the filtering of images is implemented through
 a special multiplicaton between two matrixes (also known as convulution).
 
 ![summation](res/summation.png)
-<p align="center">*Equation 1: The mentioned convolution*</p>
+*Equation 1: The mentioned convolution*
 
 In the *Equation 1*, *Ires* and *Iorig* represent, respectively, the resulting
 image after the filtering and the original image to be filtered; *Ires*(x, y)
@@ -99,7 +100,7 @@ mtrix obtained through a 2D gaussian function. In our case, we will use the
 values of *F* as shown in *Figure 1*:
 
 ![matrix](res/matrix.png)
-<p align="center">*Figure 1: Example of matrix*</p>
+*Figure 1: Example of matrix*
 
 The **Edge Enhancement** is a process that receives as input a image and outputs
 another image, but containing only the contour of the original image, in black
