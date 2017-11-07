@@ -25,7 +25,8 @@ filtragem de imagens é implementada através de uma multiplicação especial en
 duas matrizes (operação também chamada de convolução).
 
 ![summation](res/summation.png)
-<p align="center">_Equação 1: A convolução mencionada_</p>
+
+*Equação 1: A convolução mencionada*
 
 Na *Equação 1*, *Ires* e *Iorig* representam, respectivamente, a imagem 
 resultante após a filtragem e a imagem original a ser filtrada; *Ires*(x,y) e 
@@ -44,6 +45,7 @@ obtida através de uma função gaussiana 2D. Para o nosso caso, usaremos os
 valores para *F* como mostrados na Figura 1, abaixo:
 
 ![matrix](res/matrix.png)
+
 *Figura 1: Exemplo da matriz*
 
 **Realce de Arestas** é um processo de realce de arestas na imagem. Esse 
@@ -81,6 +83,7 @@ processing is made. In general, the filtering of images is implemented through
 a special multiplicaton between two matrixes (also known as convulution).
 
 ![summation](res/summation.png)
+
 *Equation 1: The mentioned convolution*
 
 In the *Equation 1*, *Ires* and *Iorig* represent, respectively, the resulting
@@ -100,6 +103,7 @@ mtrix obtained through a 2D gaussian function. In our case, we will use the
 values of *F* as shown in *Figure 1*:
 
 ![matrix](res/matrix.png)
+
 *Figure 1: Example of matrix*
 
 The **Edge Enhancement** is a process that receives as input a image and outputs
