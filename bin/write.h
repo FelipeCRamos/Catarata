@@ -1,7 +1,7 @@
 #ifndef WRITE_H
 #define WRITE_H
 
-#include "general.h"
+#include "utils.h"
 
 void saveImage(Img *image, char path[]);
 

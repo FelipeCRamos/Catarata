@@ -1,4 +1,4 @@
-#include "general.h"
+#include "utils.h"
 #include "write.h"
 
 void saveImage(Img *image, char path[]){

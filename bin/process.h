@@ -1,9 +1,11 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "general.h"
+#include "utils.h"
 
-Img *grayscale(Img *image);
+Img *grayscale(Img *img);
+
+Img *gaussianFilter(Img *img);
 // TODO
 
 #endif

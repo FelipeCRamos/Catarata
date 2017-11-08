@@ -1,7 +1,7 @@
 #ifndef READ_H
 #define READ_H
 
-#include "general.h"
+#include "utils.h"
 
 Img *readImage(char *imgName);
 
