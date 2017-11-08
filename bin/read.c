@@ -72,14 +72,14 @@ Img *readImage(char *imgName)
   ungetc(c, image);
 
   // reading height and width
-  if (!fscanf(image, "%i %i\n", &img->height, &img->width)) {
+  if (!fscanf(image, "%i %i\n", &img->width, &img->height)) {
     fprintf(stderr, "Invalid image size (error reading '%s'\n", strippedImgName);
     fclose(image);
     free(img);
     return NULL;
   } else {
     printf("Dimensions identified ");
-    printf("(HxW): %ix%i pixels\n", img->height, img->width);
+    printf("(WxH): %ix%i pixels\n", img->width, img->height);
   }
 
   
@@ -116,7 +116,7 @@ Img *readImage(char *imgName)
   static int loaded_pixels = 0;
   for(int i = 0; i < img->height; i++){
     for(int j = 0; j < img->width; j++){
-      fscanf(image, "%i %i %i", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
+      fscanf(image, "%i\n%i\n%i\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
       loaded_pixels++;
       // if you want to see it for yourself in action, uncomment the next line
       // printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);

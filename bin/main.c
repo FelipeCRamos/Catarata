@@ -1,6 +1,7 @@
 #include "general.h" // lib with things that the entire program needs
 #include "read.h" // lib with only read things
 #include "process.h" // lib with only process things
+#include "write.h"
 
 int main(int argc, char const *argv[])
 {
@@ -10,6 +11,9 @@ int main(int argc, char const *argv[])
   	if (image == NULL) perror("Error opening file");
 
 	Img *original = readImage("../res/Catarata.ppm");
+
+	saveImage(grayscale(original), "../res/Catarata_grey.ppm");
+
 
 /* // DEBUG HELPER
 	printf("img->height: %i\n", original->height);

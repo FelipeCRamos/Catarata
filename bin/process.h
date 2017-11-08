@@ -3,6 +3,7 @@
 
 #include "general.h"
 
+Img *grayscale(Img *image);
 // TODO
 
 #endif
