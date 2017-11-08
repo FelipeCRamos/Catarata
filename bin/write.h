@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-void saveImage(Img *image, char path[]);
+void saveImage(Img *img, char *filepath);
 
 #endif

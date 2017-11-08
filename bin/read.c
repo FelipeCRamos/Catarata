@@ -1,43 +1,43 @@
 #include "read.h"
 
-Img *readImage(char *imgName)
+Img *readImage(char *filepath)
 {
   FILE *image;
   char buffer[16];
   Img *img; // class of the original image
 
   int max_rgb;
-  char strippedImgName[strlen(imgName)];
+  char strippedFilepath[strlen(filepath)];
 
-  // strip folder name from the imgName variable
-  short m = strlen(imgName);
+  // strip folder name from the filepath variable
+  short m = strlen(filepath);
   short n = 0;
-  while (imgName[m] != '/') {
-    strippedImgName[n] = imgName[m];
+  while (filepath[m] != '/') {
+    strippedFilepath[n] = filepath[m];
     --m;
     ++n;
   }
-  strippedImgName[n] = '\0';
+  strippedFilepath[n] = '\0';
 
   // here we have to invert the string because it is reversed (Catarata.ppm is mpp.atarataC)
   for (int i = 0, j = n - 1; i < j; ++i, --j) {
-    char aux = strippedImgName[i];
-    strippedImgName[i] = strippedImgName[j];
-    strippedImgName[j] = aux;
+    char aux = strippedFilepath[i];
+    strippedFilepath[i] = strippedFilepath[j];
+    strippedFilepath[j] = aux;
   }
 
   // allocating memory for the image
   img = (Img *) calloc(1, sizeof(Img));
   if (!img) {
-    fprintf(stderr, "Can't allocate memory (error reading '%s')\n", strippedImgName);
+    fprintf(stderr, "Can't allocate memory (error reading '%s')\n", strippedFilepath);
     free(img);
     return NULL;
   }
 
   // opening the image for reading
-  image = fopen(imgName, "r");
+  image = fopen(filepath, "r");
   if (!image) {
-    fprintf(stderr, "Can't open image '%s'\n", strippedImgName);
+    fprintf(stderr, "Can't open image '%s'\n", strippedFilepath);
     free(img);
     return NULL; 
   }else{
@@ -54,10 +54,12 @@ Img *readImage(char *imgName)
 
   // checking image format
   if (buffer[0] != 'P' || buffer[1] != '3') {
-    fprintf(stderr, "Wrong image format (should be 'P3'). Error reading '%s'\n", strippedImgName);
+    fprintf(stderr, "Wrong image format (should be 'P3'). Error reading '%s'\n", strippedFilepath);
     fclose(image);
     free(img);
     return NULL; 
+  } else {
+    printf("The image format is '%s'\n", buffer);
   }
 
   // looking for comments
@@ -73,16 +75,13 @@ Img *readImage(char *imgName)
 
   // reading height and width
   if (!fscanf(image, "%i %i\n", &img->width, &img->height)) {
-    fprintf(stderr, "Invalid image size (error reading '%s'\n", strippedImgName);
+    fprintf(stderr, "Invalid image size (error reading '%s'\n", strippedFilepath);
     fclose(image);
     free(img);
     return NULL;
   } else {
-    printf("Dimensions identified ");
-    printf("(WxH): %ix%i pixels\n", img->width, img->height);
+    printf("Dimensions identified (WxH): %ix%i pixels\n", img->width, img->height);
   }
-
-  
   
   // check the max RGB size allowed fo the image
   if (fscanf(image, "%i", &max_rgb) != 1) {
@@ -95,10 +94,9 @@ Img *readImage(char *imgName)
     img->pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
   }
 
-
   // check if the pixel matrix is null
   if (!img->pixels) {
-    fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedImgName);
+    fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedFilepath);
     fclose(image);
     free(img);
     return NULL;
@@ -113,9 +111,9 @@ Img *readImage(char *imgName)
 
       There shoud be $width times $height pixels.
   */
-  static int loaded_pixels = 0;
-  for(int i = 0; i < img->height; i++){
-    for(int j = 0; j < img->width; j++){
+  int loaded_pixels = 0;
+  for(int i = 0; i < img->height; ++i) {
+    for(int j = 0; j < img->width; ++j) {
       fscanf(image, "%i\n%i\n%i\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
       loaded_pixels++;
       // if you want to see it for yourself in action, uncomment the next line
@@ -130,12 +128,12 @@ Img *readImage(char *imgName)
     free(img);
     return NULL;
   } else {
-    printf("Correcly loaded %i pixels.\n", loaded_pixels);
+    printf("Correctly loaded %i pixels.\n", loaded_pixels);
   }
   
   printf("Closing...\n");
   // Saving info for posterior work
-  strcpy(img->filepath, imgName);
+  strcpy(img->filepath, filepath);
   // printf("%s\n", img->filepath);
   fclose(image);
   return img;

@@ -8,13 +8,11 @@ int main(int argc, char const *argv[])
 	FILE *image;
 	image = fopen("../res/Catarata.ppm", "r");
 
-  	if (image == NULL) perror("Error opening file");
+  if (image == NULL) perror("Error opening file");
 
 	Img *original = readImage("../res/Catarata.ppm");
 
-
 	saveImage(gaussianFilter(original), "../res/tests/Catarata_gauss.ppm");
-
 
 /* // DEBUG HELPER
 	printf("img->height: %i\n", original->height);
