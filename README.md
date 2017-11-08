@@ -10,7 +10,8 @@ Neste projeto, iremos implementar um programa em C para analisar 4 imagens (duas
  com catarata e duas sem catarata) e emitir um diagnóstico de cada uma.
 O projeto irá ser implementado nas seguintes etapas:
 
-- 1. **Transformação da imagem colorida para tons de cinza**  
+- 1. **Transformação da imagem colorida para tons de cinza**
+
 Para converter qualquer cor em seu nível aproximado de cinza, deve-se primeiro 
 obter suas primitivas vermelho, verde e azul (da escala Red Green Blue). 
 Adiciona-se então 30% do vermelho mais 59% do verde mais 11% do azul, 
@@ -18,7 +19,8 @@ independente da escala utilizada (0.0 a 1.0, 0 a 255, 0% a 100%). O nível
 resultante é o valor de cinza desejado. Tais porcentagens estão relacionadas à 
 própria sensibilidade visual do olho humano para as cores primárias.
 
-- 2. **Segmentação da imagem**  
+- 2. **Segmentação da imagem**
+
 A filtragem é um procedimento usual ao realizar o tratamento de uma imagem, 
 antes de que um determinado processamento possa ser feito. De uma forma geral a 
 filtragem de imagens é implementada através de uma multiplicação especial entre 
@@ -46,7 +48,7 @@ valores para *F* como mostrados na Figura 1, abaixo:
 
 ![matrix](res/matrix.png)
 
-*Figura 1: Exemplo da matriz*
+*Figura 1: Matriz de um Filtro Gaussiano*
 
 **Realce de Arestas** é um processo de realce de arestas na imagem. Esse 
 processo recebe como entrada uma imagem e produz como saída outra imagem, porém
@@ -71,6 +73,7 @@ with cataract and two without) and emit a diagnosis of each one of the images.
 The project will be implemented in the following steps:
 
 - 1. **Transformation of the colored image to greyscale**
+
 To convert any color to its greyscale, we need to obtain its red, green and blue
 primitives (from the RGB scale). We then add 30% of red, 59% of green and 11% of
 blue, independent of the scale that's been used (0.0 to 1.0, 0 to 255 of 0% to
@@ -78,6 +81,7 @@ blue, independent of the scale that's been used (0.0 to 1.0, 0 to 255 of 0% to
 human eye's visual sensibility to the primary colors.
 
 - 2. **Image segmentation**
+
 The filtering is a usual process when treating an image, before any given
 processing is made. In general, the filtering of images is implemented through
 a special multiplicaton between two matrixes (also known as convulution).
@@ -104,7 +108,7 @@ values of *F* as shown in *Figure 1*:
 
 ![matrix](res/matrix.png)
 
-*Figure 1: Example of matrix*
+*Figure 1: Matrix of a Gaussian Filter*
 
 The **Edge Enhancement** is a process that receives as input a image and outputs
 another image, but containing only the contour of the original image, in black
