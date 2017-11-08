@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-Img *grayscale(Img *img);
+Img *greyscale(Img *img);
 
 Img *gaussianFilter(Img *img);
 // TODO

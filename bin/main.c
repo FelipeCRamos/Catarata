@@ -11,8 +11,12 @@ int main(int argc, char const *argv[])
   if (image == NULL) perror("Error opening file");
 
 	Img *original = readImage("../res/Catarata.ppm");
-
-	saveImage(gaussianFilter(original), "../res/tests/Catarata_gauss.ppm");
+	Img *greyscaled = greyscale(original);
+	printf("Altura greyscaled: %i\n", greyscaled->height);
+	Img *gauss = gaussianFilter(greyscaled);
+	saveImage(gauss, "../res/tests/cat_gauss.ppm");
+	saveImage(greyscaled, "../res/tests/cat_grey.ppm");
+	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
 
 /* // DEBUG HELPER
 	printf("img->height: %i\n", original->height);
