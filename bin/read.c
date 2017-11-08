@@ -4,8 +4,8 @@ Img *readImage(char *imgName)
 {
   FILE *image;
   char buffer[16];
-  Pixel **pixels;
-  Img *img;
+  Img *img; // class of the original image
+
   int max_rgb;
   char strippedImgName[strlen(imgName)];
 
@@ -40,6 +40,8 @@ Img *readImage(char *imgName)
     fprintf(stderr, "Can't open image '%s'\n", strippedImgName);
     free(img);
     return NULL; 
+  }else{
+    printf("Sucess! Image has been loaded.\n");
   }
 
   // reading image format
@@ -75,7 +77,12 @@ Img *readImage(char *imgName)
     fclose(image);
     free(img);
     return NULL;
+  } else {
+    printf("Dimensions identified ");
+    printf("(HxW): %ix%i pixels\n", img->height, img->width);
   }
+
+  
   
   // check the max RGB size allowed fo the image
   if (fscanf(image, "%i", &max_rgb) != 1) {
@@ -83,19 +90,53 @@ Img *readImage(char *imgName)
   }
 
   // allocating the size of the pixel matrix
-  pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
+  img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
   for (int i = 0; i < img->height; ++i) {
-    pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
+    img->pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
   }
 
+
   // check if the pixel matrix is null
-  if (!pixels) {
+  if (!img->pixels) {
     fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedImgName);
     fclose(image);
     free(img);
     return NULL;
   }
 
+  // Starting the pixel mapping
+  /*
+    Little explanation:
+      For each 3 lines, we get a rgb(r, g, b), that gets us one pixel.
+      Each <Width> pixels, we get a horizontal line
+      When we've got <Height> lines, we get the final image.
+
+      There shoud be $width times $height pixels.
+  */
+  static int loaded_pixels = 0;
+  for(int i = 0; i < img->height; i++){
+    for(int j = 0; j < img->width; j++){
+      fscanf(image, "%i %i %i", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
+      loaded_pixels++;
+      // if you want to see it for yourself in action, uncomment the next line
+      // printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
+    }
+  }
+
+  // check if the number of pixels loaded equals to the number of real pixels.
+  if(!(loaded_pixels == img->height * img->width)) {
+    fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i')\n", img->height * img->width, loaded_pixels);
+    fclose(image);
+    free(img);
+    return NULL;
+  } else {
+    printf("Correcly loaded %i pixels.\n", loaded_pixels);
+  }
+  
+  printf("Closing...\n");
+  // Saving info for posterior work
+  strcpy(img->filepath, imgName);
+  // printf("%s\n", img->filepath);
   fclose(image);
   return img;
 }
