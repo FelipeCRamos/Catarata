@@ -17,6 +17,7 @@ bindir = ./bin
 CC = gcc
 CFLAGS = -Wall -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
+OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
 # Phony targets (for more information, visit https://www.gnu.org/software/make/manual/make.html#Phony-Targets)
 .PHONY: clean cleanobj cleanbin
