@@ -20,7 +20,7 @@ RM = -rm
 OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
 # Phony targets (for more information, visit https://www.gnu.org/software/make/manual/make.html#Phony-Targets)
-.PHONY: clean cleanobj cleanbin
+.PHONY: clean cleanobj cleanbin cleanimg
 .PHONY: all main build read process write
 
 # Use "make" to execute everything
@@ -76,5 +76,9 @@ cleanobj:
 cleanbin:
 	$(RM) $(bindir)/*
 
+# Removes all images
+cleanimg:
+	$(RM) ./test/*.ppm
+
 # Removes all executables and all objects
-clean: cleanobj cleanbin
+clean: cleanobj cleanbin cleanimg
