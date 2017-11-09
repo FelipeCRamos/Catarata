@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-Img *readImage(char *imgName);
+Img *readImage(char *filepath);
 
 #endif

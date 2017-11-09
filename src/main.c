@@ -1,7 +1,7 @@
-#include "utils.h" // lib with things that the entire program needs
-#include "read.h" // lib with only read things
-#include "process.h" // lib with only process things
-#include "write.h"
+#include "utils.h" // header with things that the entire program needs
+#include "read.h" // header with only read things
+#include "process.h" // header with only process things
+#include "write.h" // header with only write things
 
 int main(int argc, char const *argv[])
 {
@@ -11,9 +11,13 @@ int main(int argc, char const *argv[])
   if (image == NULL) perror("Error opening file");
 
 	Img *original = readImage("../res/Catarata.ppm");
+
 	Img *greyscaled = greyscale(original);
+
 	printf("Altura greyscaled: %i\n", greyscaled->height);
+
 	Img *gauss = gaussianFilter(greyscaled);
+
 	saveImage(gauss, "../res/tests/cat_gauss.ppm");
 	saveImage(greyscaled, "../res/tests/cat_grey.ppm");
 	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
@@ -21,10 +25,10 @@ int main(int argc, char const *argv[])
 /* // DEBUG HELPER
 	printf("img->height: %i\n", original->height);
 	printf("img->filepath: %s\n", original->filepath);
-	for(int i=0; i<original->height; i++){
-		for(int j=0; j<original->width; j++){
-			printf("rgb(%i,%i,%i)\n", original->pixels[i][j].r, original->pixels[i][j].g, original->pixels[i][j].b);
-		}
+	for (int i = 0; i < original->height; ++i) {
+    for (int j = 0; j < original->width; ++j) {
+      printf("rgb(%i,%i,%i)\n", original->pixels[i][j].r, original->pixels[i][j].g, original->pixels[i][j].b);
+    }
 	}
 */
   	fclose(image);
