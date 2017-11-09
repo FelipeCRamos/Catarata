@@ -22,9 +22,9 @@ Img *greyscale(Img *img)
 	return img;
 }
 
-Img *gaussianFilter(Img *oringinalImg)
+Img *gaussianFilter(Img *originalImg)
 {
-	Img *gaussImg = createImg(oringinalImg->height, oringinalImg->width);
+	Img *gaussImg = createImg(originalImg->height, originalImg->width);
 
 	int gauss[5][5] = {{1, 4, 7, 4, 1}, {4, 16, 26, 16, 4}, {7, 26, 41, 26, 7}, {4, 16, 26, 16, 4}, {1, 4, 7, 4, 1}};
 	double filter;
@@ -39,7 +39,7 @@ Img *gaussianFilter(Img *oringinalImg)
 			for (int k = 0; k < 5; ++k) {
 				for (int l = 0; l < 5; ++l) {
 					if ( ((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < gaussImg->height && j+2+k < gaussImg->width) ) {
-						filter += oringinalImg->pixels[i-2+k][j-2+l].r * gauss[k][l]/normalizationFactor;
+						filter += originalImg->pixels[i-2+k][j-2+l].r * gauss[k][l]/normalizationFactor;
 						// printf("filter executed\n");
 					}
 				}
@@ -51,7 +51,13 @@ Img *gaussianFilter(Img *oringinalImg)
 		}
 	}
 
-	printf("The image was succesfully blurred.\n");
+	if (!gaussImg) {
+		fprintf(stderr, "Error while blurring. Resulting image is NULL.\n");
+		free(gaussImg);
+		free(originalImg);
+	} else {
+		printf("The image was succesfully blurred.\n");
+	}
 
 	return gaussImg;
 }
@@ -102,6 +108,14 @@ Img *sobelFilter(Img *originalImg)
 		}
 	}
 	
+	if (!sobelImg) {
+		fprintf(stderr, "Error while aplying Sobel's Filter. Resulting image is NULL.\n");
+		free(sobelImg);
+		free(originalImg);
+	} else {
+		printf("Sobel's filter was successfully applied.\n");
+	}
+
 	return sobelImg;
 }
 
