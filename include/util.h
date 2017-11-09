@@ -25,4 +25,8 @@ typedef struct Img_t
 
 char *stripFilepath(char *filepath);
 
+Pixel **allocatePixel(int height, int width);
+
+Img *createImg(int height, int width);
+
 #endif

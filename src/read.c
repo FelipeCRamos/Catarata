@@ -4,24 +4,16 @@ Img *readImage(char *filepath)
 {
 	FILE *image;
 	char buffer[16];
+	int height, width;
 	Img *img; // class of the original image
 
 	int max_rgb;
 	char *strippedFilepath = stripFilepath(filepath);
 
-	// allocating memory for the image
-	img = (Img *) calloc(1, sizeof(Img));
-	if (!img) {
-		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
-		free(img);
-		return NULL;
-	}
-
 	// opening the image for reading
 	image = fopen(filepath, "r");
 	if (!image) {
 		fprintf(stderr, "Can't open image '%s'.\n", strippedFilepath);
-		free(img);
 		return NULL; 
 	} else{
 		printf("Sucess! '%s' has been loaded.\n", strippedFilepath);
@@ -31,7 +23,6 @@ Img *readImage(char *filepath)
 	if (!fgets(buffer, sizeof(buffer), image)) {
 		perror("Error reading image format.");
 		fclose(image);
-		free(img);
 		return NULL; 
 	}
 	buffer[strlen(buffer)] = 0;
@@ -41,7 +32,6 @@ Img *readImage(char *filepath)
 	if (buffer[0] != 'P' || buffer[1] != '3') {
 		fprintf(stderr, "Wrong image format (should be 'P3'). Error reading '%s'.\n", strippedFilepath);
 		fclose(image);
-		free(img);
 		return NULL; 
 	} else {
 		printf("The image format is '%s'.\n", buffer);
@@ -59,25 +49,30 @@ Img *readImage(char *filepath)
 	ungetc(c, image);
 
 	// reading height and width
-	if (!fscanf(image, "%i %i\n", &img->width, &img->height)) {
+	if (!fscanf(image, "%i %i\n", &width, &height)) {
 		fprintf(stderr, "Invalid image size (error reading '%s').\n", strippedFilepath);
 		fclose(image);
-		free(img);
 		return NULL;
 	} else {
-		printf("Dimensions identified (W x H): %ix%i pixels.\n", img->width, img->height);
+		printf("Dimensions identified (W x H): %ix%i pixels.\n", width, height);
 	}
 	
+	// allocating memory for the image
+	img = createImg(height, width);
+	if (!img) {
+		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
+		free(img);
+		fclose(image);
+		return NULL;
+	}
+
 	// check the max RGB size allowed fo the image
 	if (fscanf(image, "%i", &max_rgb) != 1) {
 		fprintf(stderr, "Invalid max RGB value.\n");
 	}
 
 	// allocating the size of the pixel matrix
-	img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
-	for (int i = 0; i < img->height; ++i) {
-		img->pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
-	}
+	// img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
 
 	// check if the pixel matrix is null
 	if (!img->pixels) {

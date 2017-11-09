@@ -23,3 +23,24 @@ char *stripFilepath(char *filepath)
 
 	return strippedFilepath;
 }
+
+Pixel **allocatePixel(int height, int width)
+{
+	Pixel **pixels = (Pixel **) calloc(height, sizeof(Pixel *));
+	for (int i = 0; i < height; ++i) {
+		pixels[i] = (Pixel *) calloc(width, sizeof(Pixel));
+	}
+
+	return pixels;
+}
+
+Img *createImg(int height, int width)
+{
+	Img *newImg = (Img *) calloc(1, sizeof(Img));
+	newImg->height = height;
+	newImg->width = width;
+
+	newImg->pixels = allocatePixel(height, width);
+
+	return newImg;
+}
