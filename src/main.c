@@ -8,18 +8,18 @@ int main(int argc, char const *argv[])
 	FILE *image;
 	image = fopen("res/Catarata.ppm", "r");
 
-  if (image == NULL) perror("Error opening file");
+	if (image == NULL) perror("Error opening file");
 
 	Img *original = readImage("res/Catarata.ppm");
 
 	Img *greyscaled = greyscale(original);
 
-	printf("Altura greyscaled: %i\n", greyscaled->height);
+	printf("Altura greyscaled: %i\n", greyscaled->height); // Simple test to see if the greyscale() has worked completely;
 
 	Img *gauss = gaussianFilter(greyscaled);
 
-	saveImage(gauss, "../res/tests/cat_gauss.ppm");
-	saveImage(greyscaled, "../res/tests/cat_grey.ppm");
+	saveImage(gauss, "res/tests/cat_gauss.ppm");
+	saveImage(greyscaled, "res/tests/cat_grey.ppm");
 	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
 
 /* // DEBUG HELPER
