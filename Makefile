@@ -26,6 +26,7 @@ OBJS = $(objdir)/read.o $(objdir)/process.o $(objdir)/write.o
 
 # Use "make" to execute everything
 all: main read process write
+	mkdir -p $(bindir)
 	$(bindir)/main
 
 # Use "make main" to compile the main
@@ -42,18 +43,22 @@ write: $(objdir)/write.o
 
 # Compiles the main
 $(bindir)/main: $(srcdir)/main.c $(OBJS)
+	mkdir -p $(bindir)
 	$(CC) $(CFLAGS) -o $@ $^
 
 # Builds only the reading module (use "make read")
 $(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the processing module (use "make process")
 $(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the writing module (use "make write")
 $(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Removes all objects
