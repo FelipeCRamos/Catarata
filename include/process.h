@@ -1,7 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "utils.h"
+#include "util.h"
 
 Img *greyscale(Img *img);
 

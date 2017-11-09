@@ -1,4 +1,3 @@
-#include "utils.h"
 #include "write.h"
 
 void saveImage(Img *img, char *filepath)

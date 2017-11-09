@@ -47,23 +47,23 @@ $(bindir)/main: $(srcdir)/main.c $(OBJS)
 	mkdir -p $(bindir)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Builds only the utils module
-$(objdir)/utils.o: $(srcdir)/utils.c $(incdir)/utils.h
+# Builds only the util module
+$(objdir)/util.o: $(srcdir)/util.c $(incdir)/util.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the reading module (use "make read")
-$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h $(incdir)/utils.h
+$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h $(incdir)/util.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the processing module (use "make process")
-$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h $(incdir)/utils.h
+$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h $(incdir)/util.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the writing module (use "make write")
-$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/utils.h
+$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/util.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 

@@ -1,4 +1,4 @@
-#include "utils.h" // header with things that the entire program needs
+#include "util.h" // header with things that the entire program needs
 #include "read.h" // header with only read things
 #include "process.h" // header with only process things
 #include "write.h" // header with only write things
