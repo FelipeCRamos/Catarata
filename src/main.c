@@ -13,15 +13,24 @@ int main(int argc, char const *argv[])
 	Img *original = readImage("res/Catarata.ppm");
 
 	Img *greyscaled = greyscale(original);
-	saveImage(greyscaled, "res/tests/cat_grey.ppm");
+	saveImage(greyscaled, "test/cat_grey.ppm");
+	char *strippedGrey = stripFilepath("res/test/cat_grey.ppm");
 	if (!greyscaled) {
-		fprintf(stderr, "Error writing the greyscaled image to 'cat_grey.ppm'.\n");
+		fprintf(stderr, "Error writing the greyscaled image to '%s'.\n", strippedGrey);
 	}
 
 	Img *gauss = gaussianFilter(greyscaled);
-	saveImage(gauss, "res/tests/cat_gauss.ppm");
+	saveImage(gauss, "test/cat_gauss.ppm");
+	char *strippedGauss = stripFilepath("test/cat_gauss.ppm");
 	if (!gauss) {
-		fprintf(stderr, "Error writing the blurred image to 'cat_gauss.ppm'.\n");
+		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
+	}
+
+	Img *sobel = sobelFilter(gauss);
+	saveImage(sobel, "test/cat_sobel.ppm");
+	char *strippedSobel = stripFilepath("test/cat_sobel.ppm");
+	if (!sobel) {
+		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
 	}
 
 	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
