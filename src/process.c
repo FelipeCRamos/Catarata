@@ -1,5 +1,10 @@
 #include "process.h"
 
+double min(double a, double b)
+{
+	return a > b ? b : a;
+}
+
 Img *greyscale(Img *img)
 {
 	unsigned int toned;
@@ -17,74 +22,87 @@ Img *greyscale(Img *img)
 	return img;
 }
 
-Img *gaussianFilter(Img *img)
+Img *gaussianFilter(Img *oringinalImg)
 {
-	int gauss[5][5] = {{2, 4, 5, 4, 2}, {4, 9, 12, 9, 4}, {5, 12, 15, 12, 5}, {4, 9, 12, 9, 4}, {2, 4, 5, 4, 2}};
-	double filter;
+	Img *gaussImg = createImg(oringinalImg->height, oringinalImg->width);
 
-	for (int i = 0; i < img->height; i++) {
-		for (int j = 0; j < img->width; j++) {
+	int gauss[5][5] = {{1, 4, 7, 4, 1}, {4, 16, 26, 16, 4}, {7, 26, 41, 26, 7}, {4, 16, 26, 16, 4}, {1, 4, 7, 4, 1}};
+	double filter;
+	double normalizationFactor = 273;
+
+	for (int i = 0; i < gaussImg->height; i++) {
+		for (int j = 0; j < gaussImg->width; j++) {
 			// this will get each pixel of img->**pixels
 			// each pixel will be the "15" on the matrix (gauss[2][2])
 
 			filter = 0;
 			for (int k = 0; k < 5; ++k) {
 				for (int l = 0; l < 5; ++l) {
-					if ( ((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < img->height && j+2+k < img->width) ) {
-						filter += img->pixels[i-2+k][j-2+l].r * gauss[k][l]/(double) 159;
+					if ( ((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < gaussImg->height && j+2+k < gaussImg->width) ) {
+						filter += oringinalImg->pixels[i-2+k][j-2+l].r * gauss[k][l]/normalizationFactor;
 						// printf("filter executed\n");
 					}
 				}
 			}
 
-			img->pixels[i][j].r = filter;
-			img->pixels[i][j].g = filter;
-			img->pixels[i][j].b = filter;
+			gaussImg->pixels[i][j].r = filter;
+			gaussImg->pixels[i][j].g = filter;
+			gaussImg->pixels[i][j].b = filter;
 		}
 	}
 
 	printf("The image was succesfully blurred.\n");
 
-	return img;
+	return gaussImg;
 }
 
-Img *sobelFilter(Img *img)
+Img *sobelFilter(Img *originalImg)
 {
-	int sobelX[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
-	int sobelY[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
-	double filterX;
-	double filterY;
+	Img *sobelImg = createImg(originalImg->height, originalImg->width);
 
-	for (int i = 0; i < img->height; ++i) {
-		for (int j = 0; j < img->width; ++j) {
+	int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+	int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+	int filter_x;
+	int filter_y;
+
+	for (int i = 0; i < sobelImg->height; ++i) {
+		for (int j = 0; j < sobelImg->width; ++j) {
 			// this will get each pixel of img->**pixels
-			// each pixel will be on the "0" on either matrix (sobelX[1][1] and
-			// sobelY[1][1]
+			// each pixel will be on the "0" on either matrix (sobel_x[1][1] and
+			// sobel_y[1][1]
 			
-			// sobelX and sobelY covolution
-			filterX = 0;
-			filterY = 0;
+			// sobel_x and sobel_y covolution
+			filter_x = 0;
+			filter_y = 0;
 			for (int k = 0; k < 3; ++k) {
 				for (int l = 0; l < 3; ++l) {
-					if ( ((i-1+k) >= 0 && (j-1+k) >= 0) && ((i+1+k) < img->height && (j+1+k) < img->width) ) {
-						filterX += img->pixels[i-1+k][j-1+l].r * sobelX[k][l];
-						filterY += img->pixels[i-1+k][j-1+l].r * sobelY[k][l];
+					// this tests if the pixel is on a border
+					if ( (i == 0 || j == 0) || (i == sobelImg->height - 1 || j == sobelImg->width - 1) ) {
+						// if it is, then its value is 0
+						filter_x += 0;
+						filter_y += 0;
+					} else {
+						// else, we multiply
+						filter_x += originalImg->pixels[i-1+k][j-1+l].r * sobel_x[k][l];
+						filter_y += originalImg->pixels[i-1+k][j-1+l].r * sobel_y[k][l];
 					}
 				}
 			}
 
-			if (sqrt(filterX*filterX + filterY*filterY) > 25) {
-				img->pixels[i][j].r = 255;
-				img->pixels[i][j].g = 255;
-				img->pixels[i][j].b = 255;
+			// here we test if the magnitude is greater then the MAX_RGB value
+			if (sqrt(filter_x*filter_x + filter_y*filter_y) > MAX_RGB) {
+				sobelImg->pixels[i][j].r = MAX_RGB;
+				sobelImg->pixels[i][j].g = MAX_RGB;
+				sobelImg->pixels[i][j].b = MAX_RGB;
 			} else {
-				img->pixels[i][j].r = sqrt(filterX*filterX + filterY*filterY);
-				img->pixels[i][j].g = sqrt(filterX*filterX + filterY*filterY);
-				img->pixels[i][j].b = sqrt(filterX*filterX + filterY*filterY);
+				sobelImg->pixels[i][j].r = sqrt(filter_x*filter_x + filter_y*filter_y);
+				sobelImg->pixels[i][j].g = sqrt(filter_x*filter_x + filter_y*filter_y);
+				sobelImg->pixels[i][j].b = sqrt(filter_x*filter_x + filter_y*filter_y);
 			}
 		}
 	}
 	
-	return img;
+	return sobelImg;
 }
+
 // TODO
