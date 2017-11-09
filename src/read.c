@@ -29,7 +29,7 @@ Img *readImage(char *filepath)
 	// allocating memory for the image
 	img = (Img *) calloc(1, sizeof(Img));
 	if (!img) {
-		fprintf(stderr, "Can't allocate memory (error reading '%s')\n", strippedFilepath);
+		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
 		free(img);
 		return NULL;
 	}
@@ -37,29 +37,31 @@ Img *readImage(char *filepath)
 	// opening the image for reading
 	image = fopen(filepath, "r");
 	if (!image) {
-		fprintf(stderr, "Can't open image '%s'\n", strippedFilepath);
+		fprintf(stderr, "Can't open image '%s'.\n", strippedFilepath);
 		free(img);
 		return NULL; 
 	}else{
-		printf("Sucess! Image has been loaded.\n");
+		printf("Sucess! '%s' has been loaded.\n", strippedFilepath);
 	}
 
 	// reading image format
 	if (!fgets(buffer, sizeof(buffer), image)) {
-		perror("Error reading image format");
+		perror("Error reading image format.");
 		fclose(image);
 		free(img);
 		return NULL; 
 	}
+	buffer[strlen(buffer)] = 0;
+	buffer[strlen(buffer) - 1] = '\0';
 
 	// checking image format
 	if (buffer[0] != 'P' || buffer[1] != '3') {
-		fprintf(stderr, "Wrong image format (should be 'P3'). Error reading '%s'\n", strippedFilepath);
+		fprintf(stderr, "Wrong image format (should be 'P3'). Error reading '%s'.\n", strippedFilepath);
 		fclose(image);
 		free(img);
 		return NULL; 
 	} else {
-		printf("The image format is '%s'\n", buffer);
+		printf("The image format is '%s'.\n", buffer);
 	}
 
 	// looking for comments
@@ -75,17 +77,17 @@ Img *readImage(char *filepath)
 
 	// reading height and width
 	if (!fscanf(image, "%i %i\n", &img->width, &img->height)) {
-		fprintf(stderr, "Invalid image size (error reading '%s'\n", strippedFilepath);
+		fprintf(stderr, "Invalid image size (error reading '%s').\n", strippedFilepath);
 		fclose(image);
 		free(img);
 		return NULL;
 	} else {
-		printf("Dimensions identified (WxH): %ix%i pixels\n", img->width, img->height);
+		printf("Dimensions identified (W x H): %ix%i pixels.\n", img->width, img->height);
 	}
 	
 	// check the max RGB size allowed fo the image
 	if (fscanf(image, "%i", &max_rgb) != 1) {
-		fprintf(stderr, "Invalid max RGB value\n");
+		fprintf(stderr, "Invalid max RGB value.\n");
 	}
 
 	// allocating the size of the pixel matrix
@@ -96,7 +98,7 @@ Img *readImage(char *filepath)
 
 	// check if the pixel matrix is null
 	if (!img->pixels) {
-		fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s')\n", strippedFilepath);
+		fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s').\n", strippedFilepath);
 		fclose(image);
 		free(img);
 		return NULL;
@@ -123,7 +125,7 @@ Img *readImage(char *filepath)
 
 	// check if the number of pixels loaded equals to the number of real pixels.
 	if(!(loaded_pixels == img->height * img->width)) {
-		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i')\n", img->height * img->width, loaded_pixels);
+		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i').\n", img->height * img->width, loaded_pixels);
 		fclose(image);
 		free(img);
 		return NULL;
@@ -131,7 +133,7 @@ Img *readImage(char *filepath)
 		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
-	printf("Closing...\n");
+	printf("Finished reading image...\n");
 	// Saving info for posterior work
 	strcpy(img->filepath, filepath);
 	// printf("%s\n", img->filepath);

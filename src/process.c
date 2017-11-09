@@ -12,6 +12,8 @@ Img *greyscale(Img *img)
 		}
 	}
 
+	printf("The image was toned to its greyscale.\n");
+
 	return img;
 }
 
@@ -29,7 +31,7 @@ Img *gaussianFilter(Img *img)
 			for (int k = 0; k < 5; ++k) {
 				for (int l = 0; l < 5; ++l) {
 					if (((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < img->height && j+2+k < img->width)) {
-						filter += img->pixels[i-2+k][j-2+l].r * gauss[k][l]/(double)159;
+						filter += img->pixels[i-2+k][j-2+l].r * gauss[k][l]/(double) 159;
 						// printf("filter executed\n");
 					}
 				}
@@ -40,6 +42,8 @@ Img *gaussianFilter(Img *img)
 			img->pixels[i][j].b = filter;
 		}
 	}
+
+	printf("The image was succesfully blurred.\n");
 
 	return img;
 }

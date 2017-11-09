@@ -14,11 +14,15 @@ int main(int argc, char const *argv[])
 
 	Img *greyscaled = greyscale(original);
 	saveImage(greyscaled, "res/tests/cat_grey.ppm");
-
-	printf("Altura greyscaled: %i\n", greyscaled->height); // Simple test to see if the greyscale() has worked completely;
+	if (!greyscaled) {
+		fprintf(stderr, "Error writing the greyscaled image to 'cat_grey.ppm'.\n");
+	}
 
 	Img *gauss = gaussianFilter(greyscaled);
 	saveImage(gauss, "res/tests/cat_gauss.ppm");
+	if (!gauss) {
+		fprintf(stderr, "Error writing the blurred image to 'cat_gauss.ppm'.\n");
+	}
 
 	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
 
