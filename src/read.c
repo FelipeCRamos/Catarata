@@ -7,24 +7,7 @@ Img *readImage(char *filepath)
 	Img *img; // class of the original image
 
 	int max_rgb;
-	char strippedFilepath[strlen(filepath)];
-
-	// strip folder name from the filepath variable
-	short m = strlen(filepath);
-	short n = 0;
-	while (filepath[m] != '/') {
-		strippedFilepath[n] = filepath[m];
-		--m;
-		++n;
-	}
-	strippedFilepath[n] = '\0';
-
-	// here we have to invert the string because it is reversed (Catarata.ppm is mpp.atarataC)
-	for (int i = 0, j = n - 1; i < j; ++i, --j) {
-		char aux = strippedFilepath[i];
-		strippedFilepath[i] = strippedFilepath[j];
-		strippedFilepath[j] = aux;
-	}
+	char *strippedFilepath = stripFilepath(filepath);
 
 	// allocating memory for the image
 	img = (Img *) calloc(1, sizeof(Img));
@@ -40,7 +23,7 @@ Img *readImage(char *filepath)
 		fprintf(stderr, "Can't open image '%s'.\n", strippedFilepath);
 		free(img);
 		return NULL; 
-	}else{
+	} else{
 		printf("Sucess! '%s' has been loaded.\n", strippedFilepath);
 	}
 
@@ -138,5 +121,6 @@ Img *readImage(char *filepath)
 	strcpy(img->filepath, filepath);
 	// printf("%s\n", img->filepath);
 	fclose(image);
+	free(strippedFilepath);
 	return img;
 }

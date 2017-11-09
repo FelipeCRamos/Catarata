@@ -30,7 +30,7 @@ Img *gaussianFilter(Img *img)
 			filter = 0;
 			for (int k = 0; k < 5; ++k) {
 				for (int l = 0; l < 5; ++l) {
-					if (((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < img->height && j+2+k < img->width)) {
+					if ( ((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < img->height && j+2+k < img->width) ) {
 						filter += img->pixels[i-2+k][j-2+l].r * gauss[k][l]/(double) 159;
 						// printf("filter executed\n");
 					}
@@ -48,4 +48,43 @@ Img *gaussianFilter(Img *img)
 	return img;
 }
 
+Img *sobelFilter(Img *img)
+{
+	int sobelX[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+	int sobelY[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+	double filterX;
+	double filterY;
+
+	for (int i = 0; i < img->height; ++i) {
+		for (int j = 0; j < img->width; ++j) {
+			// this will get each pixel of img->**pixels
+			// each pixel will be on the "0" on either matrix (sobelX[1][1] and
+			// sobelY[1][1]
+			
+			// sobelX and sobelY covolution
+			filterX = 0;
+			filterY = 0;
+			for (int k = 0; k < 3; ++k) {
+				for (int l = 0; l < 3; ++l) {
+					if ( ((i-1+k) >= 0 && (j-1+k) >= 0) && ((i+1+k) < img->height && (j+1+k) < img->width) ) {
+						filterX += img->pixels[i-1+k][j-1+l].r * sobelX[k][l];
+						filterY += img->pixels[i-1+k][j-1+l].r * sobelY[k][l];
+					}
+				}
+			}
+
+			if (sqrt(filterX*filterX + filterY*filterY) > 25) {
+				img->pixels[i][j].r = 255;
+				img->pixels[i][j].g = 255;
+				img->pixels[i][j].b = 255;
+			} else {
+				img->pixels[i][j].r = sqrt(filterX*filterX + filterY*filterY);
+				img->pixels[i][j].g = sqrt(filterX*filterX + filterY*filterY);
+				img->pixels[i][j].b = sqrt(filterX*filterX + filterY*filterY);
+			}
+		}
+	}
+	
+	return img;
+}
 // TODO
