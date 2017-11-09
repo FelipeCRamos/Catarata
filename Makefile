@@ -15,22 +15,23 @@ bindir = ./bin
 
 # Macros
 CC = gcc
-CFLAGS = -Wall -std=c11 -I. -I$(incdir)
+CFLAGS = -Wall -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
-
-OBJS = $(objdir)/read.o $(objdir)/process.o $(objdir)/write.o
 
 # Phony targets (for more information, visit https://www.gnu.org/software/make/manual/make.html#Phony-Targets)
 .PHONY: clean cleanobj cleanbin
-.PHONY: all main read process write
+.PHONY: all main build read process write
 
 # Use "make" to execute everything
-all: main read process write
+all: build main 
 	mkdir -p $(bindir)
 	$(bindir)/main
 
 # Use "make main" to compile the main
 main: $(bindir)/main
+
+# Use "make build" to build all the modules
+build: read process write
 
 # Use "make read" to build only the read module
 read: $(objdir)/read.o
@@ -46,18 +47,23 @@ $(bindir)/main: $(srcdir)/main.c $(OBJS)
 	mkdir -p $(bindir)
 	$(CC) $(CFLAGS) -o $@ $^
 
+# Builds only the utils module
+$(objdir)/utils.o: $(srcdir)/utils.c $(incdir)/utils.h
+	mkdir -p $(objdir)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 # Builds only the reading module (use "make read")
-$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h
+$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h $(incdir)/utils.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the processing module (use "make process")
-$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h
+$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h $(incdir)/utils.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the writing module (use "make write")
-$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h
+$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/utils.h
 	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
