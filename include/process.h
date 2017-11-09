@@ -6,6 +6,8 @@
 Img *greyscale(Img *img);
 
 Img *gaussianFilter(Img *img);
+
+Img *sobelFilter(Img *img, int orient);
 // TODO
 
 #endif

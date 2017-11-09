@@ -41,7 +41,7 @@ Img *readImage(char *filepath)
 		free(img);
 		return NULL; 
 	}else{
-		printf("Sucess! Image has been loaded.\n");
+		printf("Image loaded with sucess\n");
 	}
 
 	// reading image format
@@ -59,7 +59,7 @@ Img *readImage(char *filepath)
 		free(img);
 		return NULL; 
 	} else {
-		printf("The image format is '%s'\n", buffer);
+		printf("Sucessfully identified image format: '%s'\n", buffer);
 	}
 
 	// looking for comments
@@ -128,10 +128,9 @@ Img *readImage(char *filepath)
 		free(img);
 		return NULL;
 	} else {
-		printf("Correctly loaded %i pixels.\n", loaded_pixels);
+		printf("Correctly loaded %i pixels\n", loaded_pixels);
 	}
 	
-	printf("Closing...\n");
 	// Saving info for posterior work
 	strcpy(img->filepath, filepath);
 	// printf("%s\n", img->filepath);

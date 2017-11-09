@@ -12,13 +12,16 @@ int main(int argc, char const *argv[])
 
 	Img *original = readImage("res/Catarata.ppm");
 
+
 	Img *greyscaled = greyscale(original);
 	saveImage(greyscaled, "res/tests/cat_grey.ppm");
 
-	printf("Altura greyscaled: %i\n", greyscaled->height); // Simple test to see if the greyscale() has worked completely;
 
 	Img *gauss = gaussianFilter(greyscaled);
 	saveImage(gauss, "res/tests/cat_gauss.ppm");
+
+	Img *sobel = sobelFilter(gauss, 0);
+	saveImage(sobel, "res/tests/cat_sobel.ppm");
 
 	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
 
