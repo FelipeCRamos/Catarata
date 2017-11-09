@@ -6,11 +6,11 @@
 int main(int argc, char const *argv[])
 {
 	FILE *image;
-	image = fopen("../res/Catarata.ppm", "r");
+	image = fopen("res/Catarata.ppm", "r");
 
   if (image == NULL) perror("Error opening file");
 
-	Img *original = readImage("../res/Catarata.ppm");
+	Img *original = readImage("res/Catarata.ppm");
 
 	Img *greyscaled = greyscale(original);
 
@@ -26,11 +26,11 @@ int main(int argc, char const *argv[])
 	printf("img->height: %i\n", original->height);
 	printf("img->filepath: %s\n", original->filepath);
 	for (int i = 0; i < original->height; ++i) {
-    for (int j = 0; j < original->width; ++j) {
-      printf("rgb(%i,%i,%i)\n", original->pixels[i][j].r, original->pixels[i][j].g, original->pixels[i][j].b);
-    }
+		for (int j = 0; j < original->width; ++j) {
+			printf("rgb(%i,%i,%i)\n", original->pixels[i][j].r, original->pixels[i][j].g, original->pixels[i][j].b);
+		}
 	}
 */
-  	fclose(image);
+	fclose(image);
 	return 0;
 }

@@ -16,10 +16,10 @@ typedef struct Pixel_t
 
 typedef struct Img_t
 {
-  char filepath[50];
-  int height;
-  int width;
-  Pixel **pixels;
+	char filepath[50];
+	int height;
+	int width;
+	Pixel **pixels;
 } Img;
 
 #endif

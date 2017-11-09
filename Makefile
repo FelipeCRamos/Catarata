@@ -1,8 +1,8 @@
 # Makefile for the Cataract Diagnosis Software
 #
 # Creators:
-# 	- João Pedro de Amorim Paula
-# 	- Felipe C. Ramos Filho
+#		- João Pedro de Amorim Paula
+#		- Felipe C. Ramos Filho
 
 # Makefile conventions
 SHELL = /bin/sh
@@ -22,13 +22,13 @@ OBJS = $(objdir)/read.o $(objdir)/process.o $(objdir)/write.o
 
 # Phony targets (for more information, visit https://www.gnu.org/software/make/manual/make.html#Phony-Targets)
 .PHONY: clean cleanobj cleanbin
-.PHONY: all
+.PHONY: all main read process write
 
 # Use "make" to execute everything
 all: main read process write
 	$(bindir)/main
 
-# Use "make main" to execute the main (same as all)
+# Use "make main" to compile the main
 main: $(bindir)/main
 
 # Use "make read" to build only the read module
@@ -40,19 +40,19 @@ process: $(objdir)/process.o
 # Use "make write" to build only the write module
 write: $(objdir)/write.o
 
-# Executes the main
+# Compiles the main
 $(bindir)/main: $(srcdir)/main.c $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Compile only the reading module (use "make read")
+# Builds only the reading module (use "make read")
 $(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Compile only the processing module (use "make process")
+# Builds only the processing module (use "make process")
 $(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Compile only the writing module (use "make write")
+# Builds only the writing module (use "make write")
 $(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
