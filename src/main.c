@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
 	image = fopen("res/Catarata.ppm", "r");
 
 	if (image == NULL) perror("Error opening file");
-	printf("Leu\n");
+	
 	Img *original = readImage("res/Catarata.ppm");
 
 	puts("\nStarted processing the image...\n");
@@ -60,17 +60,17 @@ int main(int argc, char const *argv[])
 		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
 		fclose(image);
 	} else {
-		saveImage(gauss, "test/cat_gauss2.ppm");
+		saveImage(gauss, "test/ret_gauss.ppm");
 	}
-	printf("Vai entrar no sobel\n");
+	
 	Img *sobel = sobelFilter(gauss, 1);
 	free(gauss);
-	char *strippedSobel = stripFilepath("test/cat_sobel2.ppm");
+	char *strippedSobel = stripFilepath("test/ret_sobel.ppm");
 	if (!sobel) {
 		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
 		fclose(image);
 	} else {
-		saveImage(sobel, "test/cat_sobel2.ppm");
+		saveImage(sobel, "test/ret_sobel.ppm");
 	}
 
 /* // DEBUG HELPER
