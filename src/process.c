@@ -17,12 +17,12 @@ Img *greyscale(Img *img)
 	return img;
 }
 
-Img *gaussianFilter(Img *originalImg, unsigned short limit)
+Img *gaussianFilter(Img *originalImg, short limit)
 {
-	// if (limit <= 0) {
-	// 	fprintf(stderr, "Can't execute %i times the Gaussian filter, please give a valid number (greater than 0).\n", limit);
-	// 	return NULL;
-	// } 
+	if (limit <= 0) {
+		fprintf(stderr, "Can't execute %i times the Gaussian filter, please give a valid number (greater than 0).\n", limit);
+		return NULL;
+	} 
 
 	Img *gaussImg = createImg(originalImg->height, originalImg->width);
 
@@ -30,6 +30,10 @@ Img *gaussianFilter(Img *originalImg, unsigned short limit)
 	double filter;
 	double normalizationFactor = 170;
 	static unsigned short count = 0;
+
+	// uncomment these two lines if you want to use a 5x5 Gaussian kernel
+	// int gauss[5][5] = {{2, 4, 5, 4, 2}, {4, 9, 12, 9, 4}, {5, 12, 12, 12, 5}, {4, 9, 12, 9, 4}, {2, 4, 5, 4, 2}};
+	// double normalizationFactor = 159;
 
 	for (int i = 0; i < gaussImg->height; i++) {
 		for (int j = 0; j < gaussImg->width; j++) {
@@ -75,7 +79,7 @@ Img *gaussianFilter(Img *originalImg, unsigned short limit)
 	return gaussImg;
 }
 
-Img *sobelFilter(Img *originalImg, unsigned short limit)
+Img *sobelFilter(Img *originalImg, short limit)
 {
 	if (limit <= 0) {
 		fprintf(stderr, "Can't execute %i times the Sobel filter, please give a valid number (greater than 0).\n", limit);

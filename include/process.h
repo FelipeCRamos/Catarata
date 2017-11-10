@@ -5,9 +5,9 @@
 
 Img *greyscale(Img *img);
 
-Img *gaussianFilter(Img *originalImg, unsigned short limit);
+Img *gaussianFilter(Img *originalImg, short limit);
 
-Img *sobelFilter(Img *originalImg, unsigned short limit);
+Img *sobelFilter(Img *originalImg, short limit);
 // TODO
 
 #endif
