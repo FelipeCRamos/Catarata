@@ -6,38 +6,43 @@
 int main(int argc, char const *argv[])
 {
 	// uncomment this for the interface
-	// puts("     ---------------------------------------------------------------------");
-	// puts("    |  _     _  _______  ___      _______  _______  __   __  _______  __  |");
-	// puts("    | | | _ | ||       ||   |    |       ||       ||  |_|  ||       ||  | |");
-	// puts("    | | || || ||    ___||   |    |       ||   _   ||       ||    ___||  | |");
-	// puts("    | |       ||   |___ |   |    |       ||  | |  ||       ||   |___ |  | |");
-	// puts("    | |       ||    ___||   |___ |      _||  |_|  ||       ||    ___||__| |");
-	// puts("    | |   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___  __  |");
-	// puts("    | |__| |__||_______||_______||_______||_______||_|   |_||_______||__| |");
-	// puts("    |                                                                     |");
-	// puts("     ---------------------------------------------------------------------");
-	// puts("___                                                               _             ");
-	// puts(" | _   |_|_  _   _ _ |_ _  _ _  _|_   _|. _  _  _  _  _. _   _ _ (_|_    _  _ _ ");
-	// puts(" |(_)  |_| )(-  (_(_||_(_|| (_|(_|_  (_||(_|(_)| )(_)_)|_)  _)(_)| |_\\)/(_|| (- ");
-	// puts("                                            _/                                  ");
-	// puts("\n\n /\\   _|_|_  _  _ _.");
-	// puts("/~~\\|_|| | |(_)| _\\.");
-	// puts("\n - Felipe C. Ramos\n - João Pedro de A. Paula\n\n\n");
+	puts("     ---------------------------------------------------------------------");
+	puts("    |  _     _  _______  ___      _______  _______  __   __  _______  __  |");
+	puts("    | | | _ | ||       ||   |    |       ||       ||  |_|  ||       ||  | |");
+	puts("    | | || || ||    ___||   |    |       ||   _   ||       ||    ___||  | |");
+	puts("    | |       ||   |___ |   |    |       ||  | |  ||       ||   |___ |  | |");
+	puts("    | |       ||    ___||   |___ |      _||  |_|  ||       ||    ___||__| |");
+	puts("    | |   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___  __  |");
+	puts("    | |__| |__||_______||_______||_______||_______||_|   |_||_______||__| |");
+	puts("    |                                                                     |");
+	puts("     ---------------------------------------------------------------------");
+	puts("___                                                               _             ");
+	puts(" | _   |_|_  _   _ _ |_ _  _ _  _|_   _|. _  _  _  _  _. _   _ _ (_|_    _  _ _ ");
+	puts(" |(_)  |_| )(-  (_(_||_(_|| (_|(_|_  (_||(_|(_)| )(_)_)|_)  _)(_)| |_\\)/(_|| (- ");
+	puts("                                            _/                                  ");
+	puts("\n\n /\\   _|_|_  _  _ _.");
+	puts("/~~\\|_|| | |(_)| _\\.");
+	puts("\n - Felipe C. Ramos\n - João Pedro de A. Paula\n\n\n");
 
-	// if (!strcmp(argv[1], "-i")) {
-	// 	printf("The image to be analised is '%s'.\n", argv[2]);
-	// }
+	if (!strcmp(argv[1], "-i")) {
+		printf("The image to be analised is '%s'.\n", argv[2]);
+	}
 
 	for (int i = 0; i < argc; ++i) {
 		printf("argv[%i]: %s\n", i, argv[i]);
+		for(int j=0; j<strlen(argv[i]); j++){
+			printf("%c ", argv[i][j]);
+		}
+		printf("\n");
 	}
 
+
 	FILE *image;
-	image = fopen("res/Catarata2.ppm", "r");
+	image = fopen(argv[1], "r");
 
 	if (image == NULL) perror("Error opening file");
 
-	Img *original = readImage("res/Catarata2.ppm");
+	Img *original = readImage(argv[1]);
 
 	puts("\nStarted processing the image...\n");
 
@@ -52,7 +57,7 @@ int main(int argc, char const *argv[])
 	}
 
 	Img *gauss = gaussianFilter(greyscaled, 1);
-	free(greyscaled);
+	// free(greyscaled);
 	char *strippedGauss = stripFilepath("test/cat_gauss2.ppm");
 	if (!gauss) {
 		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
@@ -60,9 +65,9 @@ int main(int argc, char const *argv[])
 	} else {
 		saveImage(gauss, "test/cat_gauss2.ppm");
 	}
-
+	printf("Vai entrar no sobel\n");
 	Img *sobel = sobelFilter(gauss, 1);
-	free(gauss);
+	// free(gauss);
 	char *strippedSobel = stripFilepath("test/cat_sobel2.ppm");
 	if (!sobel) {
 		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
