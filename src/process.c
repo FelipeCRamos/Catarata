@@ -22,13 +22,19 @@ Img *greyscale(Img *img)
 	return img;
 }
 
-Img *gaussianFilter(Img *originalImg)
+Img *gaussianFilter(Img *originalImg, unsigned short limit)
 {
+	if (limit <= 0) {
+		fprintf(stderr, "Can't execute %i times the Gaussian filter, please give a valid number (greater than 0).\n", limit);
+		return NULL;
+	} 
+
 	Img *gaussImg = createImg(originalImg->height, originalImg->width);
 
-	int gauss[5][5] = {{1, 4, 7, 4, 1}, {4, 16, 26, 16, 4}, {7, 26, 41, 26, 7}, {4, 16, 26, 16, 4}, {1, 4, 7, 4, 1}};
+	int gauss[7][7] = {{1, 1, 2, 2, 2, 1, 1}, {1, 3, 4, 5, 4, 3, 1}, {2, 4, 7, 8, 7, 4, 2}, {2, 5, 8, 10, 8, 5, 2}, {2, 4, 7, 8, 7, 4, 2}, {1, 3, 4, 5, 4, 3, 1}, {1, 1, 2, 2, 2, 1, 1}};
 	double filter;
-	double normalizationFactor = 273;
+	double normalizationFactor = 170;
+	static unsigned short count = 0;
 
 	for (int i = 0; i < gaussImg->height; i++) {
 		for (int j = 0; j < gaussImg->width; j++) {
@@ -36,10 +42,10 @@ Img *gaussianFilter(Img *originalImg)
 			// each pixel will be the "15" on the matrix (gauss[2][2])
 
 			filter = 0;
-			for (int k = 0; k < 5; ++k) {
-				for (int l = 0; l < 5; ++l) {
-					if ( ((i-2+k) >= 0 && (j-2+l) >= 0) && (i+2+k < gaussImg->height && j+2+k < gaussImg->width) ) {
-						filter += originalImg->pixels[i-2+k][j-2+l].r * gauss[k][l]/normalizationFactor;
+			for (int k = 0; k < 7; ++k) {
+				for (int l = 0; l < 7; ++l) {
+					if ( ((i-3+k) >= 0 && (j-3+l) >= 0) && (i+3 < gaussImg->height && j+3 < gaussImg->width) ) {
+						filter += originalImg->pixels[i-3+k][j-3+l].r * gauss[k][l]/normalizationFactor;
 						// printf("filter executed\n");
 					}
 				}
@@ -56,20 +62,38 @@ Img *gaussianFilter(Img *originalImg)
 		free(gaussImg);
 		free(originalImg);
 	} else {
-		printf("The image was succesfully blurred.\n");
+		if (count == 0) {
+			printf("The image was succesfully blurred %i time.\n", count + 1);
+			++count;
+		} else {
+			printf("The image was succesfully blurred %i times.\n", count + 1);
+			++count;
+		}
+	}
+
+	if (limit > 1) {
+		gaussImg = gaussianFilter(gaussImg, limit - 1);
+	} else if (limit == 1) {
+		return gaussImg;
 	}
 
 	return gaussImg;
 }
 
-Img *sobelFilter(Img *originalImg)
+Img *sobelFilter(Img *originalImg, unsigned short limit)
 {
+	if (limit <= 0) {
+		fprintf(stderr, "Can't execute %i times the Sobel filter, please give a valid number (greater than 0).\n", limit);
+		return NULL;
+	} 
+
 	Img *sobelImg = createImg(originalImg->height, originalImg->width);
 
 	int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
 	int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 	int filter_x;
 	int filter_y;
+	static unsigned short count = 0;
 
 	for (int i = 0; i < sobelImg->height; ++i) {
 		for (int j = 0; j < sobelImg->width; ++j) {
@@ -113,7 +137,20 @@ Img *sobelFilter(Img *originalImg)
 		free(sobelImg);
 		free(originalImg);
 	} else {
-		printf("Sobel's filter was successfully applied.\n");
+		if (count == 0) {
+			printf("Sobel's filter was successfully applied %i time.\n", count + 1);
+			++count;
+		} else {
+			printf("Sobel's filter was successfully applied %i times.\n", count + 1);
+			++count;
+		}
+		// printf("Sobel's filter was successfully applied.\n");
+	}
+
+	if (limit > 1) {
+		sobelImg = sobelFilter(sobelImg, limit - 1);
+	} else if (limit == 1) {
+		return sobelImg;
 	}
 
 	return sobelImg;
