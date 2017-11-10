@@ -24,44 +24,38 @@ int main(int argc, char const *argv[])
 	puts("/~~\\|_|| | |(_)| _\\.");
 	puts("\n - Felipe C. Ramos\n - João Pedro de A. Paula\n\n\n");
 
-	if (!strcmp(argv[1], "-i")) {
-		printf("The image to be analised is '%s'.\n", argv[2]);
-	}
+	// if (!strcmp(argv[1], "-i")) {
+	// 	printf("The image to be analised is '%s'.\n", argv[2]);
+	// }
 
-	for (int i = 0; i < argc; ++i) {
-		printf("argv[%i]: %s\n", i, argv[i]);
-	}
+	// for (int i = 0; i < argc; ++i) {
+	// 	printf("argv[%i]: %s\n", i, argv[i]);
+	// }
 
 
 	FILE *image;
-	if(argv[1] == "-i" && argv[2] != NULL){
-		image = fopen(argv[2], "r");
-	}else{
-		printf("Image path not identified, please enter below:\n");
-		scanf("%s", argv[2]);
-		printf("Argv new: %s\n", argv[2]);
-	}
-	
+	image = fopen("res/Catarata.ppm", "r");
 
 	if (image == NULL) perror("Error opening file");
-
-	Img *original = readImage(argv[1]);
+	printf("Leu\n");
+	Img *original = readImage("res/Catarata.ppm");
 
 	puts("\nStarted processing the image...\n");
 
 	Img *greyscaled = greyscale(original);
 	free(original);
-	char *strippedGrey = stripFilepath("res/test/cat_grey2.ppm");
+
+	char *strippedGrey = stripFilepath("res/test/ret_grey.ppm");
 	if (!greyscaled) {
 		fprintf(stderr, "Error writing the greyscaled image to '%s'.\n", strippedGrey);
 		fclose(image);
 	} else {
-		saveImage(greyscaled, "test/cat_grey2.ppm");
+		saveImage(greyscaled, "test/ret_grey.ppm");
 	}
 
 	Img *gauss = gaussianFilter(greyscaled, 1);
-	// free(greyscaled);
-	char *strippedGauss = stripFilepath("test/cat_gauss2.ppm");
+
+	char *strippedGauss = stripFilepath("test/ret_gauss.ppm");
 	if (!gauss) {
 		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
 		fclose(image);
@@ -70,7 +64,7 @@ int main(int argc, char const *argv[])
 	}
 	printf("Vai entrar no sobel\n");
 	Img *sobel = sobelFilter(gauss, 1);
-	// free(gauss);
+	free(gauss);
 	char *strippedSobel = stripFilepath("test/cat_sobel2.ppm");
 	if (!sobel) {
 		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
