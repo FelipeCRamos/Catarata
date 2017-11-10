@@ -15,7 +15,7 @@ bindir = ./bin
 
 # Macros
 CC = gcc
-CFLAGS = -Wall -std=c11 -lm -I. -I$(incdir)
+CFLAGS = -Wall -Wextra -Werror -fexceptions -g -ggdb -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
 OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
@@ -25,8 +25,8 @@ OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
 # Use "make" to execute everything
 all: build main 
-	mkdir -p $(bindir)
-	$(bindir)/main
+	@mkdir -p $(bindir)
+	@$(bindir)/main
 
 # Use "make main" to compile the main
 main: $(bindir)/main
