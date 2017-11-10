@@ -30,15 +30,18 @@ int main(int argc, char const *argv[])
 
 	for (int i = 0; i < argc; ++i) {
 		printf("argv[%i]: %s\n", i, argv[i]);
-		for(int j=0; j<strlen(argv[i]); j++){
-			printf("%c ", argv[i][j]);
-		}
-		printf("\n");
 	}
 
 
 	FILE *image;
-	image = fopen(argv[1], "r");
+	if(argv[1] == "-i" && argv[2] != NULL){
+		image = fopen(argv[2], "r");
+	}else{
+		printf("Image path not identified, please enter below:\n");
+		scanf("%s", argv[2]);
+		printf("Argv new: %s\n", argv[2]);
+	}
+	
 
 	if (image == NULL) perror("Error opening file");
 
