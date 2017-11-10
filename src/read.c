@@ -2,6 +2,7 @@
 
 Img *readImage(char *filepath)
 {
+	puts("Reading the image...\n");
 	FILE *image;
 	char buffer[16];
 	int height, width;
@@ -111,7 +112,7 @@ Img *readImage(char *filepath)
 		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
-	printf("Finished reading image...\n");
+	printf("\nFinished reading image...\n");
 	// Saving info for posterior work
 	strcpy(img->filepath, filepath);
 	// printf("%s\n", img->filepath);

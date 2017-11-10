@@ -1,10 +1,5 @@
 #include "process.h"
 
-double min(double a, double b)
-{
-	return a > b ? b : a;
-}
-
 Img *greyscale(Img *img)
 {
 	unsigned int toned;
@@ -24,10 +19,10 @@ Img *greyscale(Img *img)
 
 Img *gaussianFilter(Img *originalImg, unsigned short limit)
 {
-	if (limit <= 0) {
-		fprintf(stderr, "Can't execute %i times the Gaussian filter, please give a valid number (greater than 0).\n", limit);
-		return NULL;
-	} 
+	// if (limit <= 0) {
+	// 	fprintf(stderr, "Can't execute %i times the Gaussian filter, please give a valid number (greater than 0).\n", limit);
+	// 	return NULL;
+	// } 
 
 	Img *gaussImg = createImg(originalImg->height, originalImg->width);
 
