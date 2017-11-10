@@ -13,27 +13,34 @@ int main(int argc, char const *argv[])
 	Img *original = readImage("res/Catarata.ppm");
 
 	Img *greyscaled = greyscale(original);
-	saveImage(greyscaled, "test/cat_grey.ppm");
+	free(original);
 	char *strippedGrey = stripFilepath("res/test/cat_grey.ppm");
 	if (!greyscaled) {
 		fprintf(stderr, "Error writing the greyscaled image to '%s'.\n", strippedGrey);
+		fclose(image);
+	} else {
+		saveImage(greyscaled, "test/cat_grey.ppm");
 	}
 
-	Img *gauss = gaussianFilter(greyscaled);
-	saveImage(gauss, "test/cat_gauss.ppm");
+	Img *gauss = gaussianFilter(greyscaled, 1);
+	free(greyscaled);
 	char *strippedGauss = stripFilepath("test/cat_gauss.ppm");
 	if (!gauss) {
 		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
+		fclose(image);
+	} else {
+		saveImage(gauss, "test/cat_gauss.ppm");
 	}
 
-	Img *sobel = sobelFilter(gauss);
-	saveImage(sobel, "test/cat_sobel.ppm");
+	Img *sobel = sobelFilter(gauss, 1);
+	free(gauss);
 	char *strippedSobel = stripFilepath("test/cat_sobel.ppm");
 	if (!sobel) {
 		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
+		fclose(image);
+	} else {
+		saveImage(sobel, "test/cat_sobel.ppm");
 	}
-
-	// saveImage(gaussianFilter(greyscaled), "../res/tests/Catarata_gauss.ppm");
 
 /* // DEBUG HELPER
 	printf("img->height: %i\n", original->height);
