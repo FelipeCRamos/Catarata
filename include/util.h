@@ -7,23 +7,28 @@
 #include <math.h>
 
 #define MAX_RGB 255
+#define ushort unsigned short
+#define uchar unsigned char
 
 typedef struct Pixel_t
 {
-	int r; // red
-	int g; // green
-	int b; // blue
+	ushort r; // red
+	ushort g; // green
+	ushort b; // blue
 } Pixel;
 
 typedef struct Img_t
 {
-	char filepath[50];
-	int height;
-	int width;
+	// char filepath[50];
+	uchar max_rgb;
+	ushort height;
+	ushort width;
 	Pixel **pixels;
 } Img;
 
 char *stripFilepath(char *filepath);
+
+char *outFilepath(char *folder, char *filename, char *toCat, char *format);
 
 Pixel **allocatePixel(int height, int width);
 
