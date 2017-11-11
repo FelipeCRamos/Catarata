@@ -15,7 +15,8 @@ Img *readPPM(char *filepath)
 	image = fopen(filepath, "r");
 	if (!image) {
 		fprintf(stderr, "Can't open image '%s'.\n", strippedFilepath);
-		return NULL; 
+		perror(filepath);
+		exit(1);
 	} else{
 		printf("Sucess! '%s' has been loaded.\n", strippedFilepath);
 	}

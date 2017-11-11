@@ -3,6 +3,11 @@
 // remove the filepath from the string
 char *stripFilepath(char *filepath)
 {
+	// if the argument is the file itself, return it
+	if (!strstr(filepath, "/")) {
+		return filepath;
+	}
+
 	char *strippedFilepath = (char *) calloc(strlen(filepath), sizeof(char));
 
 	// strip folder name from the filepath

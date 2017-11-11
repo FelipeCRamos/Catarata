@@ -62,6 +62,11 @@ int main(int argc, char const *argv[])
 	// this is on read.c
 	Img *original = readPPM(filepath);
 
+	if (!original) {
+		perror(filepath);
+		exit(1);
+	}
+
 	// here we enter on process.c
 	puts("\nStarted processing the image...\n");
 
