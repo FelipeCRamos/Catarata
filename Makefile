@@ -15,21 +15,25 @@ bindir = ./bin
 
 # Macros
 CC = gcc
-CFLAGS = -Wall -std=c11 -I. -I$(incdir)
+CFLAGS = -Wall -g -ggdb -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
-
-OBJS = $(objdir)/read.o $(objdir)/process.o $(objdir)/write.o
+OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
 # Phony targets (for more information, visit https://www.gnu.org/software/make/manual/make.html#Phony-Targets)
-.PHONY: clean cleanobj cleanbin
-.PHONY: all main read process write
+.PHONY: clean cleanobj cleanbin cleanimg
+.PHONY: all main build read process write
 
 # Use "make" to execute everything
-all: main read process write
-	$(bindir)/main
+all: build main 
 
 # Use "make main" to compile the main
 main: $(bindir)/main
+
+# Use "make build" to build all the modules
+build: util read process write
+
+# Use "make util" to build only the util module
+util: $(objdir)/util.o
 
 # Use "make read" to build only the read module
 read: $(objdir)/read.o
@@ -42,18 +46,27 @@ write: $(objdir)/write.o
 
 # Compiles the main
 $(bindir)/main: $(srcdir)/main.c $(OBJS)
+	mkdir -p $(bindir)
 	$(CC) $(CFLAGS) -o $@ $^
 
+# Builds only the util module
+$(objdir)/util.o: $(srcdir)/util.c $(incdir)/util.h
+	mkdir -p $(objdir)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 # Builds only the reading module (use "make read")
-$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h
+$(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h $(incdir)/util.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the processing module (use "make process")
-$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h
+$(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h $(incdir)/util.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Builds only the writing module (use "make write")
-$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h
+$(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/util.h
+	mkdir -p $(objdir)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Removes all objects
@@ -64,5 +77,9 @@ cleanobj:
 cleanbin:
 	$(RM) $(bindir)/*
 
+# Removes all images
+cleanimg:
+	$(RM) ./test/*.ppm
+
 # Removes all executables and all objects
-clean: cleanobj cleanbin
+clean: cleanobj cleanbin cleanimg

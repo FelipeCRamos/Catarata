@@ -1,8 +1,8 @@
 #ifndef READ_H
 #define READ_H
 
-#include "utils.h"
+#include "util.h"
 
-Img *readImage(char *filepath);
+Img *readPPM(char *filepath);
 
 #endif

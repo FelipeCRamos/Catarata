@@ -1,13 +1,13 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "utils.h"
+#include "util.h"
 
 Img *greyscale(Img *img);
 
-Img *gaussianFilter(Img *img);
+Img *gaussianFilter(Img *originalImg, uchar limit);
 
-Img *sobelFilter(Img *img, int orient);
+Img *sobelFilter(Img *originalImg, uchar limit);
 // TODO
 
 #endif
