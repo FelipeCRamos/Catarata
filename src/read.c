@@ -1,14 +1,14 @@
 #include "read.h"
 
-Img *readImage(char *filepath)
+Img *readPPM(char *filepath)
 {
 	puts("Reading the image...\n");
 	FILE *image;
 	char buffer[16];
-	int height, width;
+	ushort height, width;
 	Img *img; // class of the original image
 
-	int max_rgb;
+	uchar max_rgb;
 	char *strippedFilepath = stripFilepath(filepath);
 
 	// opening the image for reading
@@ -50,7 +50,7 @@ Img *readImage(char *filepath)
 	ungetc(c, image);
 
 	// reading height and width
-	if (!fscanf(image, "%i %i\n", &width, &height)) {
+	if (!fscanf(image, "%hu %hu\n", &width, &height)) {
 		fprintf(stderr, "Invalid image size (error reading '%s').\n", strippedFilepath);
 		fclose(image);
 		return NULL;
@@ -68,9 +68,10 @@ Img *readImage(char *filepath)
 	}
 
 	// check the max RGB size allowed fo the image
-	if (fscanf(image, "%i", &max_rgb) != 1) {
+	if (fscanf(image, "%hhu", &max_rgb) != 1) {
 		fprintf(stderr, "Invalid max RGB value.\n");
 	}
+	img->max_rgb = max_rgb;
 
 	// allocating the size of the pixel matrix
 	// img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
@@ -95,7 +96,7 @@ Img *readImage(char *filepath)
 	int loaded_pixels = 0;
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
-			fscanf(image, "%i\n%i\n%i\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
+			fscanf(image, "%hu\n%hu\n%hu\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
 			loaded_pixels++;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
@@ -113,9 +114,7 @@ Img *readImage(char *filepath)
 	}
 	
 	printf("\nFinished reading image...\n");
-	// Saving info for posterior work
-	strcpy(img->filepath, filepath);
-	// printf("%s\n", img->filepath);
+
 	fclose(image);
 	free(strippedFilepath);
 	return img;
