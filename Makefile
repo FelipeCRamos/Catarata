@@ -25,14 +25,15 @@ OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
 # Use "make" to execute everything
 all: build main 
-	@mkdir -p $(bindir)
-	@$(bindir)/main
 
 # Use "make main" to compile the main
 main: $(bindir)/main
 
 # Use "make build" to build all the modules
-build: read process write
+build: util read process write
+
+# Use "make util" to build only the util module
+util: $(objdir)/util.o
 
 # Use "make read" to build only the read module
 read: $(objdir)/read.o
