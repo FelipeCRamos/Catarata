@@ -1,18 +1,22 @@
 #include "write.h"
 
-void saveImage(Img *img, char *filepath)
+void writePPM(Img *img, char *filepath)
 {
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
+
+	if (!outImage) {
+		perror(filepath);
+	}
 
 	// imagem format and creators comment
 	fprintf(outImage, "P3\n# CREATED BY FELIPE RAMOS & JOAO PEDRO\n");
 
 	// width and height of the image
-	fprintf(outImage, "%i %i\n", img->width, img->height);
+	fprintf(outImage, "%hu %hu\n", img->width, img->height);
 
 	// the maximum rgb value of the image
-	fprintf(outImage, "%i\n", MAX_RGB);
+	fprintf(outImage, "%hhu\n", img->max_rgb);
 
 	// writing all of the rgb values of each pixel of the image
 	for (int i = 0; i < img->height; ++i) {

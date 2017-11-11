@@ -3,6 +3,6 @@
 
 #include "util.h"
 
-void saveImage(Img *img, char *filepath);
+void writePPM(Img *img, char *filepath);
 
 #endif
