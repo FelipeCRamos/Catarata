@@ -32,14 +32,9 @@ char *stripFilepath(char *filepath)
 
 // generate the output filepath
 char *outFilepath(char *folder, char *filename, char *toCat, char *format)
-{
-	// calculate the resulting size of the outFilepath
-	uchar outSize = strlen(folder) + strlen(filename) + strlen(toCat);
-
-	char *outFilepath = (char *) calloc(outSize, sizeof(char));
-
-	// concatenate the output folder
-	strcat(outFilepath, folder);
+{ 
+	char *outFilepath;
+	outFilepath = (char *) calloc(strlen(folder) + strlen(filename) + strlen(toCat) + strlen(format), sizeof(char));
 
 	// strip image format from the filename
 	uchar i = 0;
@@ -50,13 +45,13 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format)
 		++j;
 	}
 
-	// concatenate the string that we want to add
+	strcpy(outFilepath, folder);
+	strcat(outFilepath, filename);
 	strcat(outFilepath, toCat);
 	// add the '.' for the format
 	outFilepath[strlen(outFilepath)] = '.';
-	// concatenate the format
 	strcat(outFilepath, format);
-
+	// printf("generated path: %s\n", cPath);
 	return outFilepath;
 }
 
