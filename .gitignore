@@ -1,4 +1,5 @@
 *.txt
 obj/
 bin/
+test/
 .gdb_history
