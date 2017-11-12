@@ -36,6 +36,8 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format)
 	char *outFilepath;
 	outFilepath = (char *) calloc(strlen(folder) + strlen(filename) + strlen(toCat) + strlen(format), sizeof(char));
 
+	strcpy(outFilepath, folder);
+
 	// strip image format from the filename
 	uchar i = 0;
 	uchar j = strlen(outFilepath);
@@ -45,13 +47,11 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format)
 		++j;
 	}
 
-	strcpy(outFilepath, folder);
-	strcat(outFilepath, filename);
 	strcat(outFilepath, toCat);
 	// add the '.' for the format
 	outFilepath[strlen(outFilepath)] = '.';
 	strcat(outFilepath, format);
-	// printf("generated path: %s\n", cPath);
+
 	return outFilepath;
 }
 

@@ -26,6 +26,7 @@ int main(int argc, char const *argv[])
 
 	if (argc < 7) {
 		// TODO: verification of which flag is missing
+		
 	}
 
 	/* check what are the args passed on to the program and store the args'

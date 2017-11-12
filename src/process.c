@@ -96,9 +96,8 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 
 	for (ushort i = 0; i < sobelImg->height; ++i) {
 		for (ushort j = 0; j < sobelImg->width; ++j) {
-			// this will get each pixel of img->**pixels
-			// each pixel will be on the "0" on either matrix (sobel_x[1][1] and
-			// sobel_y[1][1]
+			/* this will get each pixel of img->**pixels; each pixel will be on the "0"
+			 * on either matrix (sobel_x[1][1] and sobel_y[1][1] */
 			
 			// sobel_x and sobel_y covolution
 			filter_x = 0;
@@ -119,10 +118,11 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 			}
 
 			// here we test if the magnitude is greater then the MAX_RGB value
+			// TODO replace MAX_RGB with originalImg->max_rgb
 			if (sqrt(filter_x*filter_x + filter_y*filter_y) > MAX_RGB) {
-				sobelImg->pixels[i][j].r = MAX_RGB;
-				sobelImg->pixels[i][j].g = MAX_RGB;
-				sobelImg->pixels[i][j].b = MAX_RGB;
+				sobelImg->pixels[i][j].r = originalImg->max_rgb;
+				sobelImg->pixels[i][j].g = originalImg->max_rgb;
+				sobelImg->pixels[i][j].b = originalImg->max_rgb;
 			} else {
 				sobelImg->pixels[i][j].r = sqrt(filter_x*filter_x + filter_y*filter_y);
 				sobelImg->pixels[i][j].g = sqrt(filter_x*filter_x + filter_y*filter_y);
@@ -154,75 +154,5 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 
 	return sobelImg;
 }
-
-// Img *sobelOperator(Img *img, int orient){
-// 	int xKernel[3][3] = {{1, 0, -1},{1, 0, -1},{1, 0, -1}}; // horizontal sobel-operator
-// 	int yKernel[3][3] = {{1, 1, 1},{0, 0, 0},{-1, -1, -1}}; // vertical sobel-operator
-// 	Img *conv;
-// 	conv = (Img *) calloc(1, sizeof(Img));
-// 	if (!img) {
-// 		// fprintf(stderr, "Can't allocate memory (error reading '%s')\n", strippedFilepath);
-// 		free(conv);
-// 		return NULL;
-// 	}
-// 	conv->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
-// 	for (int i = 0; i < img->height; ++i) {
-// 		conv->pixels[i] = (Pixel *) calloc(img->width, sizeof(Pixel));
-// 	}
-
-
-// 	double aux;
-// 	double filter;
-// 	double power;
-	
-// 	for (int i = 0; i < img->height; i++) {
-// 		for (int j = 0; j < img->width; j++) {
-
-// 			filter = 0;
-// 			for (int k = 0; k < 3; ++k) {
-// 				for (int l = 0; l < 3; ++l) {
-// 					if (((i-1+k) >= 0 && (j-1+l) >= 0) && (i+1+k < img->height && j+1+k < img->width)) {
-// 						power = 1;
-// 						if(orient == 0){
-// 							aux = img->pixels[i-1+k][j-1+l].r * xKernel[k][l]/power;
-// 						}
-// 						if(orient == 1){
-// 							aux = img->pixels[i-1+k][j-1+l].r * yKernel[k][l]/power;
-// 						}
-// 						if(aux >= MAX_RGB){
-// 							filter += MAX_RGB;
-// 						}else{
-// 							filter += aux;	
-// 						}
-						
-// 					}
-// 				}
-// 			}
-
-// 			conv->pixels[i][j].r = filter;
-// 			conv->pixels[i][j].g = filter;
-// 			conv->pixels[i][j].b = filter;
-// 		}
-// 	}
-// 	conv->width = img->width;
-// 	conv->height = img->height;
-
-// 	/* LEIA ISSO: eu comentei o char filepath[50] na struct Img porque eu acho que
-// 	não precisa mais, já que podemos gerar o filepath com a função outFilepath. */
-// 	// strcpy(conv->filepath, img->filepath);
-	
-// 	if(orient == 0){
-// 		return sobelFilter(conv, 1);
-// 	}
-// 	else{
-// 		if(orient == 1){
-// 			printf("Sobel filter applied with sucess\n");
-// 			return conv;
-// 		}
-// 	}
-
-// 	// eu coloquei esse return aqui só pra tirar o warning
-// 	return conv;
-// }
 
 // TODO
