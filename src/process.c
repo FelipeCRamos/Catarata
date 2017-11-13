@@ -58,8 +58,8 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 
 	if (!gaussImg) {
 		fprintf(stderr, "Error while blurring. Resulting image is NULL.\n");
-		free(gaussImg);
-		free(originalImg);
+		freeImg(gaussImg);
+		freeImg(originalImg);
 	} else {
 		if (count == 0) {
 			printf("The image was succesfully blurred %i time.\n", count + 1);
@@ -73,6 +73,7 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 	if (limit > 1) {
 		gaussImg = gaussianFilter(gaussImg, limit - 1);
 	} else if (limit == 1) {
+		freeImg(originalImg);
 		return gaussImg;
 	}
 
@@ -88,6 +89,8 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 
 	Img *sobelImg = createImg(originalImg->height, originalImg->width);
 
+	// int sobel_x[3][3] = {{3, 0, -3}, {10, 0, -10}, {3, 0, -3}};
+	// int sobel_y[3][3] = {{3, 10, 3}, {0, 0, 0}, {-3, -10, -3}};
 	int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
 	int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 	int filter_x;
@@ -133,8 +136,8 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	
 	if (!sobelImg) {
 		fprintf(stderr, "Error while aplying Sobel's Filter. Resulting image is NULL.\n");
-		free(sobelImg);
-		free(originalImg);
+		freeImg(sobelImg);
+		freeImg(originalImg);
 	} else {
 		if (count == 0) {
 			printf("Sobel's filter was successfully applied %i time.\n", count + 1);
@@ -149,6 +152,7 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	if (limit > 1) {
 		sobelImg = sobelFilter(sobelImg, limit - 1);
 	} else if (limit == 1) {
+		freeImg(originalImg);
 		return sobelImg;
 	}
 

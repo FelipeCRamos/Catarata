@@ -1,5 +1,7 @@
 #include "write.h"
 
+#define DEBUG 0
+
 void writePPM(Img *img, char *filepath)
 {
 	FILE *outImage;
@@ -16,7 +18,9 @@ void writePPM(Img *img, char *filepath)
 	fprintf(outImage, "%hu %hu\n", img->width, img->height);
 
 	// the maximum rgb value of the image
-	fprintf(outImage, "%hhu\n", img->max_rgb);
+	fprintf(outImage, "%i\n", img->max_rgb);
+
+	DEBUG_PRINT("img->max_rgb: %i\n", img->max_rgb);
 
 	// writing all of the rgb values of each pixel of the image
 	for (int i = 0; i < img->height; ++i) {
