@@ -3,6 +3,7 @@
 #include "process.h" // header with only process things
 #include "write.h" // header with only write things
 
+// Defines the DEBUG Mode on/off (0/1)
 #define DEBUG 0
 
 int main(int argc, char const *argv[])
@@ -12,7 +13,8 @@ int main(int argc, char const *argv[])
 		fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
 			 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 			 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
-			 " file\n\n");
+			 " file\n\nExample of usage:\n"
+			 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
 		exit(1);
 	}
 
