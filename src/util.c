@@ -73,7 +73,7 @@ Img *createImg(int height, int width)
 	newImg->height = height;
 	newImg->width = width;
 	// TODO work on the max_rgb value
-	// newImg->max_rgb = max_rgb;
+	newImg->max_rgb = 255;
 
 	newImg->pixels = allocatePixel(height, width);
 
