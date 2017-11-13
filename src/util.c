@@ -67,13 +67,24 @@ Pixel **allocatePixel(int height, int width)
 }
 
 // this allocates a new Img *
-Img *createImg(int height, int width)
+Img *createImg(int height, int width, uchar max_rgb)
 {
 	Img *newImg = (Img *) calloc(1, sizeof(Img));
 	newImg->height = height;
 	newImg->width = width;
+	newImg->max_rgb = max_rgb;
 
 	newImg->pixels = allocatePixel(height, width);
 
 	return newImg;
+}
+
+void freeImg(Img *img)
+{
+	for (ushort i = 0; i < img->height; ++i) {
+		free(img->pixels[i]);
+	}
+	free(img->pixels);
+
+	free(img);
 }

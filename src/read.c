@@ -1,5 +1,7 @@
 #include "read.h"
 
+#define DEBUG 0
+
 Img *readPPM(char *filepath)
 {
 	puts("Reading the image...\n");
@@ -59,29 +61,25 @@ Img *readPPM(char *filepath)
 		printf("Dimensions identified (W x H): %ix%i pixels.\n", width, height);
 	}
 	
-	// allocating memory for the image
-	img = createImg(height, width);
-	if (!img) {
-		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
-		free(img);
-		fclose(image);
-		return NULL;
-	}
-
 	// check the max RGB size allowed fo the image
 	if (fscanf(image, "%hhu", &max_rgb) != 1) {
 		fprintf(stderr, "Invalid max RGB value.\n");
 	}
-	img->max_rgb = max_rgb;
 
-	// allocating the size of the pixel matrix
-	// img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
+	// allocating memory for the image
+	img = createImg(height, width, max_rgb);
+	if (!img) {
+		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
+		freeImg(img);
+		fclose(image);
+		return NULL;
+	}
 
 	// check if the pixel matrix is null
 	if (!img->pixels) {
 		fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s').\n", strippedFilepath);
 		fclose(image);
-		free(img);
+		freeImg(img);
 		return NULL;
 	}
 
@@ -98,7 +96,7 @@ Img *readPPM(char *filepath)
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
 			fscanf(image, "%hu\n%hu\n%hu\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
-			loaded_pixels++;
+			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
 		}
@@ -108,10 +106,10 @@ Img *readPPM(char *filepath)
 	if(!(loaded_pixels == img->height * img->width)) {
 		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i').\n", img->height * img->width, loaded_pixels);
 		fclose(image);
-		free(img);
+		freeImg(img);
 		return NULL;
 	} else {
-		printf("Correctly loaded %i pixels\n", loaded_pixels);
+		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
 	printf("\nFinished reading image...\n");

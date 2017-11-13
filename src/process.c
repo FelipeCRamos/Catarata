@@ -1,5 +1,7 @@
 #include "process.h"
 
+#define DEBUG 0
+
 Img *greyscale(Img *img)
 {
 	ushort toned;
@@ -24,7 +26,7 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 		return NULL;
 	} 
 
-	Img *gaussImg = createImg(originalImg->height, originalImg->width);
+	Img *gaussImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 
 	uchar gauss[7][7] = {{1, 1, 2, 2, 2, 1, 1}, {1, 3, 4, 5, 4, 3, 1}, {2, 4, 7, 8, 7, 4, 2}, {2, 5, 8, 10, 8, 5, 2}, {2, 4, 7, 8, 7, 4, 2}, {1, 3, 4, 5, 4, 3, 1}, {1, 1, 2, 2, 2, 1, 1}};
 	float filter;
@@ -58,8 +60,8 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 
 	if (!gaussImg) {
 		fprintf(stderr, "Error while blurring. Resulting image is NULL.\n");
-		free(gaussImg);
-		free(originalImg);
+		freeImg(gaussImg);
+		freeImg(originalImg);
 	} else {
 		if (count == 0) {
 			printf("The image was succesfully blurred %i time.\n", count + 1);
@@ -73,6 +75,7 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 	if (limit > 1) {
 		gaussImg = gaussianFilter(gaussImg, limit - 1);
 	} else if (limit == 1) {
+		freeImg(originalImg);
 		return gaussImg;
 	}
 
@@ -86,8 +89,10 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 		return NULL;
 	} 
 
-	Img *sobelImg = createImg(originalImg->height, originalImg->width);
+	Img *sobelImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 
+	// int sobel_x[3][3] = {{3, 0, -3}, {10, 0, -10}, {3, 0, -3}};
+	// int sobel_y[3][3] = {{3, 10, 3}, {0, 0, 0}, {-3, -10, -3}};
 	int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
 	int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 	int filter_x;
@@ -133,8 +138,8 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	
 	if (!sobelImg) {
 		fprintf(stderr, "Error while aplying Sobel's Filter. Resulting image is NULL.\n");
-		free(sobelImg);
-		free(originalImg);
+		freeImg(sobelImg);
+		freeImg(originalImg);
 	} else {
 		if (count == 0) {
 			printf("Sobel's filter was successfully applied %i time.\n", count + 1);
@@ -149,10 +154,34 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	if (limit > 1) {
 		sobelImg = sobelFilter(sobelImg, limit - 1);
 	} else if (limit == 1) {
+		freeImg(originalImg);
 		return sobelImg;
 	}
 
 	return sobelImg;
+}
+
+Img *threshold(Img *originalImg, unsigned int intensity){
+	Img *thresholdImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
+	int pixelValue = 0;
+	for(ushort i=0; i < thresholdImg->height; i++){
+		for(ushort j=0; j < thresholdImg->width; j++){
+			// for each pixel, we will check if is bigger than X, if it is: set to max_rgb
+			if(originalImg->pixels[i][j].r >= intensity){
+				pixelValue = thresholdImg->max_rgb;
+				// printf("Pixel [%i][%i](%i) is bigger than %i.\n", i, j, originalImg->pixels[i][j].r, intensity);
+			}else{
+				pixelValue = 0;
+
+				// printf("Pixel [%i][%i](%i) is smaller than %i.\n", i, j, thresholdImg->pixels[i][j].r, intensity);
+			}
+			thresholdImg->pixels[i][j].r = pixelValue;
+			thresholdImg->pixels[i][j].g = pixelValue;
+			thresholdImg->pixels[i][j].b = pixelValue;
+		}
+	}
+	printf("Threshold was successfully applied with intensity %i.\n", intensity);
+	return thresholdImg;
 }
 
 // TODO
