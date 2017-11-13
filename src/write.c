@@ -29,3 +29,33 @@ void writePPM(Img *img, char *filepath)
 
 	fclose(outImage);
 }
+
+void writePBM(Img *img, char *filepath){
+	FILE *outImage;
+	outImage = fopen(filepath, "w");
+	int pixel;
+	if (!outImage) {
+		perror(filepath);
+	}
+
+	// imagem format and creators comments
+	fprintf(outImage, "P4\n# CREATED BY FELIPE RAMOS & JOÃO PEDRO\n");
+
+	// width and height of the image
+	fprintf(outImage, "%hu %hu\n", img->width, img->height);
+
+	// writing all of the binary values of each pixel of the image
+	for (int i = 0; i < img->height; i++){
+		for (int j = 0; j < img->width; j++){
+			if(img->pixels[i][j].r == 255){
+				pixel = 1;
+			}else{
+				pixel = 0;
+			}
+			fprintf(outImage, "%i ", pixel);
+		}
+		fprintf(outImage, "\n");
+	}
+	fclose(outImage);
+
+}

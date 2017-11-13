@@ -119,6 +119,19 @@ int main(int argc, char const *argv[])
 	free(outSobel);
 	free(strippedSobel);
 
+
+	// Apply threshold to sobelImg with intensity 120 (pixels bigger than this will be converted to 255, smaller than will be 0);
+	Img *thresholdImg = threshold(sobelImg, 35);
+
+	char *outThreshold = outFilepath(outDir, filename, "_threshold2", "pbm");
+	char *strippedThreshold = stripFilepath(outThreshold);
+	if (!thresholdImg){
+		fprintf(stderr, "Error writing the threshold increase image to '%s'.\n", strippedThreshold);
+	} else {
+		writePBM(thresholdImg, outThreshold);
+	}
+
+
 	freeImg(sobelImg);
 	free(filename);
 	return 0;

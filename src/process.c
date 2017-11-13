@@ -161,4 +161,27 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	return sobelImg;
 }
 
+Img *threshold(Img *originalImg, unsigned int intensity){
+	Img *thresholdImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
+	int pixelValue = 0;
+	for(ushort i=0; i < thresholdImg->height; i++){
+		for(ushort j=0; j < thresholdImg->width; j++){
+			// for each pixel, we will check if is bigger than X, if it is: set to max_rgb
+			if(originalImg->pixels[i][j].r >= intensity){
+				pixelValue = thresholdImg->max_rgb;
+				// printf("Pixel [%i][%i](%i) is bigger than %i.\n", i, j, originalImg->pixels[i][j].r, intensity);
+			}else{
+				pixelValue = 0;
+
+				// printf("Pixel [%i][%i](%i) is smaller than %i.\n", i, j, thresholdImg->pixels[i][j].r, intensity);
+			}
+			thresholdImg->pixels[i][j].r = pixelValue;
+			thresholdImg->pixels[i][j].g = pixelValue;
+			thresholdImg->pixels[i][j].b = pixelValue;
+		}
+	}
+	printf("Threshold was successfully applied with intensity %i.\n", intensity);
+	return thresholdImg;
+}
+
 // TODO
