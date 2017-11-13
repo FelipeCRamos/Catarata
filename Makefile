@@ -15,7 +15,7 @@ bindir = ./bin
 
 # Macros
 CC = gcc
-CFLAGS = -Wall -g -ggdb -std=c11 -lm -I. -I$(incdir)
+CFLAGS = -Wall -Wextra -g -ggdb -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
 OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 

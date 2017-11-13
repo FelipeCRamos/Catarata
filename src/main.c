@@ -3,8 +3,19 @@
 #include "process.h" // header with only process things
 #include "write.h" // header with only write things
 
+#define DEBUG 0
+
 int main(int argc, char const *argv[])
 {
+	// test if all the arguments were provided
+	if (argc < 7) {
+		fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+			 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+			 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+			 " file\n\n");
+		exit(1);
+	}
+
 	// little welcome interface I did while bored
 	puts("     ---------------------------------------------------------------------");
 	puts("    |  _     _  _______  ___      _______  _______  __   __  _______  __  |");
@@ -22,12 +33,7 @@ int main(int argc, char const *argv[])
 	puts("                                            _/                                  ");
 	puts("\n\n /\\   _|_|_  _  _ _.");
 	puts("/~~\\|_|| | |(_)| _\\.");
-	puts("\n - Felipe C. Ramos\n - João Pedro de A. Paula\n\n\n");
-
-	if (argc < 7) {
-		// TODO: verification of which flag is missing
-		
-	}
+	puts("\n - Felipe C. Ramos Filho\n - João Pedro de A. Paula\n\n\n");
 
 	/* check what are the args passed on to the program and store the args'
 	indexes on a variable, so we can access them any time we want */
@@ -59,11 +65,11 @@ int main(int argc, char const *argv[])
 	printf("The diagnosis is in '%s'.\n", diagFile);
 
 	putchar('\n');
-	
-	// this is on read.c
-	Img *original = readPPM(filepath);
 
-	if (!original) {
+	Img *originalImg = readPPM(filepath);
+	// TODO different reading and writing functions for different formats
+	
+	if (!originalImg) {
 		perror(filepath);
 		exit(1);
 	}
@@ -72,40 +78,46 @@ int main(int argc, char const *argv[])
 	puts("\nStarted processing the image...\n");
 
 	// tone the image to its greyscale
-	Img *greyscaled = greyscale(original);
+	Img *greyscaled = greyscale(originalImg);
 
 	char *outGrey = outFilepath(outDir, filename, "_grey", format);
 	char *strippedGrey = stripFilepath(outGrey);
 	if (!greyscaled) {
 		fprintf(stderr, "Error writing the greyscaled image to '%s'.\n", strippedGrey);
-		free(original);
+		freeImg(originalImg);
 	} else {
 		writePPM(greyscaled, outGrey);
 	}
+	free(outGrey);
+	free(strippedGrey);
 
 	// blur the image with the gaussian filter
-	Img *gauss = gaussianFilter(greyscaled, 1);
+	Img *gaussImg = gaussianFilter(greyscaled, 1);
 
 	char *outGauss = outFilepath(outDir, filename, "_gauss", format);
 	char *strippedGauss = stripFilepath(outGauss);
-	if (!gauss) {
+	if (!gaussImg) {
 		fprintf(stderr, "Error writing the blurred image to '%s'.\n", strippedGauss);
 	} else {
-		writePPM(gauss, outGauss);
+		writePPM(gaussImg, outGauss);
 	}
+	free(outGauss);
+	free(strippedGauss);
 	
 	// apply Sobel's filter to enhance the edges
-	Img *sobel = sobelFilter(gauss, 1);
-	free(gauss);
+	Img *sobelImg = sobelFilter(gaussImg, 1);
 
 	char *outSobel = outFilepath(outDir, filename, "_sobel", format);
 	char *strippedSobel = stripFilepath(outSobel);
-	if (!sobel) {
+	if (!sobelImg) {
 		fprintf(stderr, "Error writing the edge detection image to '%s'.\n", strippedSobel);
 	} else {
-		writePPM(sobel, outSobel);
+		writePPM(sobelImg, outSobel);
 	}
+	free(outSobel);
+	free(strippedSobel);
 
-	free(original);
+	freeImg(sobelImg);
+	free(filename);
 	return 0;
 }

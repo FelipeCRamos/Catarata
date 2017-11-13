@@ -63,7 +63,7 @@ Img *readPPM(char *filepath)
 	img = createImg(height, width);
 	if (!img) {
 		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
-		free(img);
+		freeImg(img);
 		fclose(image);
 		return NULL;
 	}
@@ -81,7 +81,7 @@ Img *readPPM(char *filepath)
 	if (!img->pixels) {
 		fprintf(stderr, "Couldn't allocate the pixel matrix (error reading '%s').\n", strippedFilepath);
 		fclose(image);
-		free(img);
+		freeImg(img);
 		return NULL;
 	}
 
@@ -98,7 +98,7 @@ Img *readPPM(char *filepath)
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
 			fscanf(image, "%hu\n%hu\n%hu\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
-			loaded_pixels++;
+			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
 		}
@@ -108,10 +108,10 @@ Img *readPPM(char *filepath)
 	if(!(loaded_pixels == img->height * img->width)) {
 		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i').\n", img->height * img->width, loaded_pixels);
 		fclose(image);
-		free(img);
+		freeImg(img);
 		return NULL;
 	} else {
-		printf("Correctly loaded %i pixels\n", loaded_pixels);
+		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
 	printf("\nFinished reading image...\n");

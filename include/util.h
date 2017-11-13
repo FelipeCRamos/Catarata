@@ -6,6 +6,14 @@
 #include <string.h>
 #include <math.h>
 
+#define DEBUG_PRINT(fmt, ...)																								 \
+	do { 																																			 \
+		if (DEBUG) {																														 \
+			fprintf(stderr, "DEBUG %s:%i:%s(): ", __FILE__, __LINE__, __func__); 	 \
+			fprintf(stderr, fmt,	__VA_ARGS__); 																	 \
+		} 																																			 \
+	} while (0)
+
 #define MAX_RGB 255
 #define ushort unsigned short
 #define uchar unsigned char
@@ -33,5 +41,7 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format);
 Pixel **allocatePixel(int height, int width);
 
 Img *createImg(int height, int width);
+
+void freeImg(Img *img);
 
 #endif
