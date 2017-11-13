@@ -72,8 +72,20 @@ Img *createImg(int height, int width)
 	Img *newImg = (Img *) calloc(1, sizeof(Img));
 	newImg->height = height;
 	newImg->width = width;
+	// TODO work on the max_rgb value
+	// newImg->max_rgb = max_rgb;
 
 	newImg->pixels = allocatePixel(height, width);
 
 	return newImg;
+}
+
+void freeImg(Img *img)
+{
+	for (ushort i = 0; i < img->height; ++i) {
+		free(img->pixels[i]);
+	}
+	free(img->pixels);
+
+	free(img);
 }
