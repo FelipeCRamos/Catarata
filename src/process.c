@@ -1,5 +1,7 @@
 #include "process.h"
 
+#define DEBUG 0
+
 Img *greyscale(Img *img)
 {
 	ushort toned;
@@ -24,7 +26,7 @@ Img *gaussianFilter(Img *originalImg, uchar limit)
 		return NULL;
 	} 
 
-	Img *gaussImg = createImg(originalImg->height, originalImg->width);
+	Img *gaussImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 
 	uchar gauss[7][7] = {{1, 1, 2, 2, 2, 1, 1}, {1, 3, 4, 5, 4, 3, 1}, {2, 4, 7, 8, 7, 4, 2}, {2, 5, 8, 10, 8, 5, 2}, {2, 4, 7, 8, 7, 4, 2}, {1, 3, 4, 5, 4, 3, 1}, {1, 1, 2, 2, 2, 1, 1}};
 	float filter;
@@ -87,7 +89,7 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 		return NULL;
 	} 
 
-	Img *sobelImg = createImg(originalImg->height, originalImg->width);
+	Img *sobelImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 
 	// int sobel_x[3][3] = {{3, 0, -3}, {10, 0, -10}, {3, 0, -3}};
 	// int sobel_y[3][3] = {{3, 10, 3}, {0, 0, 0}, {-3, -10, -3}};

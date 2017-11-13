@@ -1,5 +1,7 @@
 #include "read.h"
 
+#define DEBUG 0
+
 Img *readPPM(char *filepath)
 {
 	puts("Reading the image...\n");
@@ -59,23 +61,19 @@ Img *readPPM(char *filepath)
 		printf("Dimensions identified (W x H): %ix%i pixels.\n", width, height);
 	}
 	
+	// check the max RGB size allowed fo the image
+	if (fscanf(image, "%hhu", &max_rgb) != 1) {
+		fprintf(stderr, "Invalid max RGB value.\n");
+	}
+
 	// allocating memory for the image
-	img = createImg(height, width);
+	img = createImg(height, width, max_rgb);
 	if (!img) {
 		fprintf(stderr, "Can't allocate memory (error reading '%s').\n", strippedFilepath);
 		freeImg(img);
 		fclose(image);
 		return NULL;
 	}
-
-	// check the max RGB size allowed fo the image
-	if (fscanf(image, "%hhu", &max_rgb) != 1) {
-		fprintf(stderr, "Invalid max RGB value.\n");
-	}
-	img->max_rgb = max_rgb;
-
-	// allocating the size of the pixel matrix
-	// img->pixels = (Pixel **) calloc(img->height, sizeof(Pixel *));
 
 	// check if the pixel matrix is null
 	if (!img->pixels) {

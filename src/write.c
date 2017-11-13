@@ -1,6 +1,6 @@
 #include "write.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 void writePPM(Img *img, char *filepath)
 {

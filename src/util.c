@@ -67,13 +67,12 @@ Pixel **allocatePixel(int height, int width)
 }
 
 // this allocates a new Img *
-Img *createImg(int height, int width)
+Img *createImg(int height, int width, uchar max_rgb)
 {
 	Img *newImg = (Img *) calloc(1, sizeof(Img));
 	newImg->height = height;
 	newImg->width = width;
-	// TODO work on the max_rgb value
-	// newImg->max_rgb = max_rgb;
+	newImg->max_rgb = max_rgb;
 
 	newImg->pixels = allocatePixel(height, width);
 

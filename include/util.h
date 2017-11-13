@@ -40,7 +40,7 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format);
 
 Pixel **allocatePixel(int height, int width);
 
-Img *createImg(int height, int width);
+Img *createImg(int height, int width, uchar max_rgb);
 
 void freeImg(Img *img);
 
