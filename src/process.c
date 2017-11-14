@@ -181,6 +181,7 @@ Img *threshold(Img *originalImg, unsigned int intensity){
 		}
 	}
 	printf("Threshold was successfully applied with intensity %i.\n", intensity);
+	freeImg(originalImg);
 	return thresholdImg;
 }
 

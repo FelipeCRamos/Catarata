@@ -3,10 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <math.h>
 
-#define DEBUG_PRINT(fmt, ...)																								 \
+#define DEBUGGER(fmt, ...)																									 \
 	do { 																																			 \
 		if (DEBUG) {																														 \
 			fprintf(stderr, "DEBUG %s:%i:%s(): ", __FILE__, __LINE__, __func__); 	 \
