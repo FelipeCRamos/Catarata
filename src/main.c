@@ -120,8 +120,8 @@ int main(int argc, char const *argv[])
 	free(strippedSobel);
 
 
-	// Apply threshold to sobelImg with intensity 120 (pixels bigger than this will be converted to 255, smaller than will be 0);
-	Img *thresholdImg = threshold(sobelImg, 35);
+	// Apply threshold to sobelImg with intensity 35 (pixels bigger than this will be converted to 255, smaller than will be 0);
+	Img *thresholdImg = threshold(sobelImg, 30);
 
 	char *outThreshold = outFilepath(outDir, filename, "_threshold2", "pbm");
 	char *strippedThreshold = stripFilepath(outThreshold);
