@@ -4,7 +4,10 @@
 #include "util.h"
 
 void writePPM(Img *img, char *filepath);
-void writePBM(Img *img, char *filepath);
+
+void writePBM_PBM(ImgBin *img, char *filepath);
+
+void writePPM_PBM(Img *img, char *filepath);
 
 
 #endif

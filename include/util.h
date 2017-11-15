@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
+
 
 #define DEBUG_PRINT(fmt, ...)																								 \
 	do { 																																			 \
@@ -34,14 +36,29 @@ typedef struct Img_t
 	Pixel **pixels;
 } Img;
 
+typedef struct ImgBin_t
+{
+	ushort height;
+	ushort width;
+	bool **pixels;
+} ImgBin;
+
 char *stripFilepath(char *filepath);
 
 char *outFilepath(char *folder, char *filename, char *toCat, char *format);
 
 Pixel **allocatePixel(int height, int width);
 
+bool **allocateBinPixel(int height, int width);
+
 Img *createImg(int height, int width, uchar max_rgb);
 
+ImgBin *createImgBin(int height, int width);
+
+ImgBin *convertImg(Img *original);
+
 void freeImg(Img *img);
+
+void freeImgBin(ImgBin *img);
 
 #endif
