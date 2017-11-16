@@ -177,11 +177,6 @@ ImgBin *readPBM(char *filepath){
 		printf("Dimensions identified (W x H): %ix%i pixels.\n", width, height);
 	}
 	
-	// check the max RGB size allowed fo the image
-	// if (fscanf(image, "%hhu", &max_rgb) != 1) {
-	// 	fprintf(stderr, "Invalid max RGB value.\n");
-	// }
-
 	// allocating memory for the image
 	img = createImgBin(height, width);
 	if (!img) {
@@ -202,16 +197,20 @@ ImgBin *readPBM(char *filepath){
 	// Starting the pixel mapping
 	/*
 		Little explanation:
-			For each 3 lines, we get a rgb(r, g, b), that gets us one pixel.
+			Each line will give us that row, each pixel will be a number followed with \s
 			Each <Width> pixels, we get a horizontal line
 			When we've got <Height> lines, we get the final image.
 
 			There shoud be $width times $height pixels.
 	*/
 	int loaded_pixels = 0;
+	int temp_pixel;
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
-			fscanf(image, "%i", &img->pixels[i][j]);
+			fscanf(image, "%i", &temp_pixel);
+			if(temp_pixel >= 0 && temp_pixel <= 1){
+				img->pixels[i][j] = temp_pixel;
+			}
 			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("pixel(%i)\n", img->pixels[i][j]);

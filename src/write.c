@@ -34,7 +34,7 @@ void writePPM(Img *img, char *filepath)
 void writePBM_PBM(ImgBin *img, char *filepath){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
-	int pixel;
+	int *pixel = (int *)calloc(1, sizeof(bool));
 	if (!outImage) {
 		perror(filepath);
 	}
@@ -48,11 +48,19 @@ void writePBM_PBM(ImgBin *img, char *filepath){
 	// writing all of the binary values of each pixel of the image
 	for (int i = 0; i < img->height; i++){
 		for (int j = 0; j < img->width; j++){
-			fprintf(outImage, "%i ", img->pixels[i][j]);
+
+			fprintf(outImage, "%i ", *pixel);
+			if(*pixel >= 0 && *pixel <= 1){
+				img->pixels[i][j] = *pixel;
+			} else {
+				fprintf(stderr, "Value %i is not a bool (it shoud be, it's a PBM)", *pixel);
+			}
+			
 		}
 		fprintf(outImage, "\n");
 	}
 	fclose(outImage);
+	free(pixel);
 }
 
 // a write pbm func that recieves a Img *

@@ -188,7 +188,9 @@ int main(int argc, char const *argv[])
 	free(strippedSobel);
 
 
-	// Apply threshold to sobelImg with intensity 30 (pixels bigger than this will be converted to 255, smaller than will be 0);
+	// Apply threshold to sobelImg with intensity $value 
+	// pixels bigger than $value will be converted to 255
+	// smaller than $value will be converted to 0
 	Img *thresholdImg = threshold(sobelImg, 45);
 
 	char *outThreshold = outFilepath(outDir, filename, "_threshold", "pbm");
@@ -202,9 +204,10 @@ int main(int argc, char const *argv[])
 	free(strippedThreshold);
 
 	// Just a test to read/write pbm
-	ImgBin *pbmImage = readPBM(outThreshold);
+	ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");
 	writePBM_PBM(pbmImage, "test/teste.pbm");
 	freeImgBin(pbmImage);
+	printf("Rodou até aqui\n");
 
 
 	freeImg(sobelImg);
