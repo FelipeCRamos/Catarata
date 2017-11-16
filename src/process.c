@@ -172,7 +172,6 @@ Img *threshold(Img *originalImg, unsigned int intensity){
 				// printf("Pixel [%i][%i](%i) is bigger than %i.\n", i, j, originalImg->pixels[i][j].r, intensity);
 			}else{
 				pixelValue = 0;
-
 				// printf("Pixel [%i][%i](%i) is smaller than %i.\n", i, j, thresholdImg->pixels[i][j].r, intensity);
 			}
 			thresholdImg->pixels[i][j].r = pixelValue;

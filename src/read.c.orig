@@ -207,10 +207,14 @@ ImgBin *readPBM(char *filepath){
 	int temp_pixel;
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
+<<<<<<< HEAD
+			fscanf(image, "%i", (int *) &img->pixels[i][j]);
+=======
 			fscanf(image, "%i", &temp_pixel);
 			if(temp_pixel >= 0 && temp_pixel <= 1){
 				img->pixels[i][j] = temp_pixel;
 			}
+>>>>>>> Thresholdin
 			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("pixel(%i)\n", img->pixels[i][j]);
