@@ -70,7 +70,7 @@ int main(int argc, char const *argv[])
 	free(strippedGrey);
 
 	// blur the image with the gaussian filter
-	Img *gaussImg = gaussianFilter(greyscaled, 1);
+	Img *gaussImg = gaussianFilter(greyscaled, 2);
 
 	char *outGauss = outFilepath(outDir, filename, "_gauss", format);
 	char *strippedGauss = stripFilepath(outGauss);
@@ -96,20 +96,26 @@ int main(int argc, char const *argv[])
 	free(strippedSobel);
 
 
-	// Apply threshold to sobelImg with intensity 120 (pixels bigger than this will be converted to 255, smaller than will be 0);
-	Img *thresholdImg = threshold(sobelImg, 36);
+	// Apply threshold to sobelImg with intensity 30 (pixels bigger than this will be converted to 255, smaller than will be 0);
+	Img *thresholdImg = threshold(sobelImg, 45);
 
-	char *outThreshold = outFilepath(outDir, filename, "_threshold2", "pbm");
+	char *outThreshold = outFilepath(outDir, filename, "_threshold", "pbm");
 	char *strippedThreshold = stripFilepath(outThreshold);
 	if (!thresholdImg){
 		fprintf(stderr, "Error writing the threshold increase image to '%s'.\n", strippedThreshold);
 	} else {
-		writePBM(thresholdImg, outThreshold);
+		writePPM_PBM(thresholdImg, outThreshold);
 	}
 	free(outThreshold);
 	free(strippedThreshold);
 
-	freeImg(thresholdImg);
+	// Just a test to read/write pbm
+	ImgBin *pbmImage = readPBM(outThreshold);
+	writePBM_PBM(pbmImage, "test/teste.pbm");
+	freeImgBin(pbmImage);
+
+
+	freeImg(sobelImg);
 	free(filename);
 	return 0;
 }
