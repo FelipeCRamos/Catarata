@@ -5,4 +5,6 @@
 
 Img *readPPM(char *filepath);
 
+ImgBin *readPBM(char *filepath);
+
 #endif

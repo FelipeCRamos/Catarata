@@ -30,7 +30,8 @@ void writePPM(Img *img, char *filepath)
 	fclose(outImage);
 }
 
-void writePBM(Img *img, char *filepath){
+// a write pbm func that recieves a ImgBin *
+void writePBM_PBM(ImgBin *img, char *filepath){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
 	int pixel;
@@ -39,7 +40,7 @@ void writePBM(Img *img, char *filepath){
 	}
 
 	// imagem format and creators comments
-	fprintf(outImage, "P4\n# CREATED BY FELIPE RAMOS & JOÃO PEDRO\n");
+	fprintf(outImage, "P1\n# CREATED BY FELIPE RAMOS & JOÃO PEDRO\n");
 
 	// width and height of the image
 	fprintf(outImage, "%hu %hu\n", img->width, img->height);
@@ -47,10 +48,35 @@ void writePBM(Img *img, char *filepath){
 	// writing all of the binary values of each pixel of the image
 	for (int i = 0; i < img->height; i++){
 		for (int j = 0; j < img->width; j++){
-			if(img->pixels[i][j].r == 255){
-				pixel = 1;
-			}else{
+			fprintf(outImage, "%i ", img->pixels[i][j]);
+		}
+		fprintf(outImage, "\n");
+	}
+	fclose(outImage);
+}
+
+// a write pbm func that recieves a Img *
+void writePPM_PBM(Img *img, char *filepath){
+	FILE *outImage;
+	outImage = fopen(filepath, "w");
+	int pixel;
+	if (!outImage) {
+		perror(filepath);
+	}
+
+	// imagem format and creators comments
+	fprintf(outImage, "P1\n# CREATED BY FELIPE RAMOS & JOÃO PEDRO\n");
+
+	// width and height of the image
+	fprintf(outImage, "%hu %hu\n", img->width, img->height);
+
+	// writing all of the binary values of each pixel of the image
+	for (int i = 0; i < img->height; i++){
+		for (int j = 0; j < img->width; j++){
+			if(img->pixels[i][j].r == img->max_rgb){
 				pixel = 0;
+			}else{
+				pixel = 1;
 			}
 			fprintf(outImage, "%i ", pixel);
 		}
