@@ -2,6 +2,7 @@
 
 #define DEBUG 1
 
+// check if all the arguments were provided
 void checkArgs(int argc, char const *argv[], char *filepath, char *format, char *diagFile)
 {
 	if (argc < 3) {
