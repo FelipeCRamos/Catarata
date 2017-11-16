@@ -3,19 +3,107 @@
 #include "process.h" // header with only process things
 #include "write.h" // header with only write things
 
-// Defines the DEBUG Mode on/off (0/1)
+// Defines the DEBUG mode on/off (0/1)
 #define DEBUG 0
 
 int main(int argc, char const *argv[])
 {
+	char *filepath = NULL;
+	char *format = NULL;
+	char *diagFile = NULL;
 	// test if all the arguments were provided
-	if (argc < 7) {
+	if (argc < 3 && strcmp(argv[1], "-i")) {
 		fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
 			 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 			 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
 			 " file\n\nExample of usage:\n"
 			 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
 		exit(1);
+	} else if (argc < 7) {
+		bool input_bool = false;
+		bool format_bool = false;
+		bool diagFile_bool = false;
+		uchar i = 0;
+		while (i < argc) {
+			if (!strcmp(argv[i], "-i")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-f") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+				
+				filepath = (char *) argv[i+1];
+				input_bool = true;
+			}
+
+			if (!strcmp(argv[i], "-f")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-o") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+
+				format = (char *) argv[i+1];
+				format_bool = true;
+			}
+
+			if (!strcmp(argv[i], "-o")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-f") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+
+				diagFile = (char *) argv[i+1];
+				diagFile_bool = true;
+			}
+
+			++i;
+		}
+
+		if (!input_bool) {
+			fprintf(stderr, "Please specify an input image after the -i.\n");
+			exit(1);
+		}
+
+		if (!format_bool) {
+			printf("\n\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No format specified, defaulting to 'ppm'.\n");
+			format = "ppm";
+		}
+
+		if (!diagFile_bool) {
+			printf("\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No diagnosis file specified, defaulting to 'diagnosis.txt'.\n\n");
+			diagFile = "diagnosis.txt";
+		}
+
+		if (format_bool && argc%2 == 0) {
+			fprintf(stderr, "Please specify a format after the -f.\n");
+			exit(1);
+		} else if (diagFile_bool && argc%2 == 0) {
+			fprintf(stderr, "Please specify a diagnose file after the -o.\n");
+			exit(1);
+		}
+	} else if (argc == 7) {
+		/* check what are the args passed on to the program and store the args'
+		indexes on a variable, so we can access them any time we want */
+		for (uchar i = 0; i < argc; ++i) {
+			if (!strcmp(argv[i], "-i")) {
+				filepath = (char *) argv[i+1];
+			} else if (!strcmp(argv[i], "-f")) {
+				format = (char *) argv[i+1];
+			} else if (!strcmp(argv[i], "-o")) {
+				diagFile = (char *) argv[i+1];
+			}
+		}
 	}
 
 	// little welcome interface I did while bored
@@ -37,28 +125,8 @@ int main(int argc, char const *argv[])
 	puts("/~~\\|_|| | |(_)| _\\.");
 	puts("\n - Felipe C. Ramos Filho\n - João Pedro de A. Paula\n\n\n");
 
-	/* check what are the args passed on to the program and store the args'
-	indexes on a variable, so we can access them any time we want */
-	uchar inputIndex;
-	uchar formatIndex;
-	uchar outputIndex;
-	for (uchar i = 0; i < argc; ++i) {
-		if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "-o") || !strcmp(argv[i], "-f")) {
-			if (!strcmp(argv[i], "-i")) {
-				inputIndex = i+1;
-			} else if (!strcmp(argv[i], "-f")) {
-				formatIndex = i+1;
-			} else if (!strcmp(argv[i], "-o")) {
-				outputIndex = i+1;
-			}
-		}
-	}
-
 	// these are just auxiliary variables
-	char *filepath = (char *) argv[inputIndex];
 	char *filename = stripFilepath(filepath);
-	char *format = (char *) argv[formatIndex];
-	char *diagFile = (char *) argv[outputIndex];
 	char *outDir = "test/";
 
 	// these are some testing printf's, maybe they'll get changed
@@ -121,7 +189,7 @@ int main(int argc, char const *argv[])
 
 
 	// Apply threshold to sobelImg with intensity 120 (pixels bigger than this will be converted to 255, smaller than will be 0);
-	Img *thresholdImg = threshold(sobelImg, 35);
+	Img *thresholdImg = threshold(sobelImg, 36);
 
 	char *outThreshold = outFilepath(outDir, filename, "_threshold2", "pbm");
 	char *strippedThreshold = stripFilepath(outThreshold);
@@ -130,9 +198,10 @@ int main(int argc, char const *argv[])
 	} else {
 		writePBM(thresholdImg, outThreshold);
 	}
+	free(outThreshold);
+	free(strippedThreshold);
 
-
-	freeImg(sobelImg);
+	freeImg(thresholdImg);
 	free(filename);
 	return 0;
 }
