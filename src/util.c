@@ -1,5 +1,104 @@
 #include "util.h"
 
+#define DEBUG 1
+
+void checkArgs(int argc, char const *argv[], char *filepath, char *format, char *diagFile)
+{
+	if (argc < 3) {
+		fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+			 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+			 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+			 " file\n\nExample of usage:\n"
+			 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+		exit(1);
+	} else if (argc < 7) {
+		bool input_bool = false;
+		bool format_bool = false;
+		bool diagFile_bool = false;
+		uchar i = 0;
+		while (i < argc) {
+			if (!strcmp(argv[i], "-i")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-f") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+				
+				filepath = (char *) argv[i+1];
+				input_bool = true;
+			}
+
+			if (!strcmp(argv[i], "-f")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-o") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+
+				format = (char *) argv[i+1];
+				format_bool = true;
+			}
+
+			if (!strcmp(argv[i], "-o")) {
+				if (i+1 == argc || !strcmp(argv[i+1], "-f") || !strcmp(argv[i+1], "-i")) {
+					fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
+						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
+						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
+						 " file\n\nExample of usage:\n"
+						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+					exit(1);
+				}
+
+				diagFile = (char *) argv[i+1];
+				diagFile_bool = true;
+			}
+
+			++i;
+		}
+
+		if (!input_bool) {
+			fprintf(stderr, "Please specify an input image after the -i.\n");
+			exit(1);
+		}
+
+		if (!format_bool) {
+			printf("\n\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No format specified, defaulting to 'ppm'.\n");
+			format = "ppm";
+		}
+
+		if (!diagFile_bool) {
+			printf("\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No diagnosis file specified, defaulting to 'diagnosis.txt'.\n\n");
+			diagFile = "diagnosis.txt";
+		}
+
+		if (format_bool && argc%2 == 0) {
+			fprintf(stderr, "Please specify a format after the -f.\n");
+			exit(1);
+		} else if (diagFile_bool && argc%2 == 0) {
+			fprintf(stderr, "Please specify a diagnose file after the -o.\n");
+			exit(1);
+		}
+	} else if (argc == 7) {
+		/* check what are the args passed on to the program and store the args'
+		indexes on a variable, so we can access them any time we want */
+		for (uchar i = 0; i < argc; ++i) {
+			if (!strcmp(argv[i], "-i")) {
+				filepath = (char *) argv[i+1];
+			} else if (!strcmp(argv[i], "-f")) {
+				format = (char *) argv[i+1];
+			} else if (!strcmp(argv[i], "-o")) {
+				diagFile = (char *) argv[i+1];
+			}
+		}
+	}
+}
+
 // remove the filepath from the string
 char *stripFilepath(char *filepath)
 {

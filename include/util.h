@@ -12,7 +12,7 @@
 #define DEBUGGER(fmt, ...)																									 \
 	do { 																																			 \
 		if (DEBUG) {																														 \
-			fprintf(stderr, "DEBUG %s:%i:%s(): ", __FILE__, __LINE__, __func__); 	 \
+			fprintf(stderr, "\e[1m\x1b[34mDEBUG\x1b[0m\e[0m \e[1m%s:%i:%s():\e[0m ", __FILE__, __LINE__, __func__); 	 \
 			fprintf(stderr, fmt,	__VA_ARGS__); 																	 \
 		} 																																			 \
 	} while (0)
@@ -43,6 +43,8 @@ typedef struct ImgBin_t
 	ushort width;
 	bool **pixels;
 } ImgBin;
+
+void checkArgs(int argc, char const *argv[], char *filepath, char *format, char *diagFile);
 
 char *stripFilepath(char *filepath);
 
