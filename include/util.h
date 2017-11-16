@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
-#include <stdbool.h>
 
 
 #define DEBUGGER(fmt, ...)																									 \
