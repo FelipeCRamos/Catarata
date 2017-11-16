@@ -185,4 +185,19 @@ Img *threshold(Img *originalImg, unsigned int intensity){
 	return thresholdImg;
 }
 
-// TODO
+// Img *BHThresholding(Img *originalImg)
+// {
+// 	Img *thresholdImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
+// 	uchar histogram[originalImg->max_rgb] = { 0 };
+// 	ushort pixel;
+
+// 	for (ushort i = 0; i < originalImg->height; ++i) {
+// 		for (ushort j = 0; j < originalImg->width; ++j) {
+// 			pixel = originalImg->
+// 		}
+// 	}
+
+// 	return thresholdImg;
+// }
+
+// TODO hough transform
