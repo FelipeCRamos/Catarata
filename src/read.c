@@ -211,7 +211,7 @@ ImgBin *readPBM(char *filepath){
 	int loaded_pixels = 0;
 	for(int i = 0; i < img->height; ++i) {
 		for(int j = 0; j < img->width; ++j) {
-			fscanf(image, "%i", &img->pixels[i][j]);
+			fscanf(image, "%i", (int *) &img->pixels[i][j]);
 			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("pixel(%i)\n", img->pixels[i][j]);

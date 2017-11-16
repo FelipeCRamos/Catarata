@@ -34,7 +34,6 @@ void writePPM(Img *img, char *filepath)
 void writePBM_PBM(ImgBin *img, char *filepath){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
-	int pixel;
 	if (!outImage) {
 		perror(filepath);
 	}
