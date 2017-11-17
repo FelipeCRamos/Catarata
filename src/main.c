@@ -115,7 +115,6 @@ int main(int argc, char const *argv[])
 	ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");
 	writePBM_PBM(pbmImage, "test/teste.pbm");
 	freeImgBin(pbmImage);
-	printf("Rodou até aqui\n");
 
 
 	freeImg(sobelImg);
