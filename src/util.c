@@ -3,20 +3,20 @@
 #define DEBUG 1
 
 // check if all the arguments were provided
-void checkArgs(int argc, char const *argv[], char *filepath, char *format, char *diagFile)
+void checkArgs(int argc, char *argv[], char *filepath, char *format, char *diagFile)
 {
 	if (argc < 3) {
 		fprintf(stderr, "usage: ./catarata -i <input-image> -f <input-image-format>"
 			 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 			 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
 			 " file\n\nExample of usage:\n"
-			 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+			 "./catarata -i res/Catarata.ppm -f ppm -o diagnosis.txt\n\n");
 		exit(1);
 	} else if (argc < 7) {
 		bool input_bool = false;
 		bool format_bool = false;
 		bool diagFile_bool = false;
-		uchar i = 0;
+		uchar i = 1;
 		while (i < argc) {
 			if (!strcmp(argv[i], "-i")) {
 				if (i+1 == argc || !strcmp(argv[i+1], "-f") || !strcmp(argv[i+1], "-i")) {
@@ -24,11 +24,11 @@ void checkArgs(int argc, char const *argv[], char *filepath, char *format, char 
 						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
 						 " file\n\nExample of usage:\n"
-						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+						 "./catarata -i res/Catarata.ppm -f ppm -o diagnosis.txt\n\n");
 					exit(1);
 				}
 				
-				filepath = (char *) argv[i+1];
+				filepath = strcpy(filepath, (char *) argv[i+1]);
 				input_bool = true;
 			}
 
@@ -38,11 +38,11 @@ void checkArgs(int argc, char const *argv[], char *filepath, char *format, char 
 						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
 						 " file\n\nExample of usage:\n"
-						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+						 "./catarata -i res/Catarata.ppm -f ppm -o diagnosis.txt\n\n");
 					exit(1);
 				}
 
-				format = (char *) argv[i+1];
+				format = strcpy(format, (char *) argv[i+1]);
 				format_bool = true;
 			}
 
@@ -52,11 +52,11 @@ void checkArgs(int argc, char const *argv[], char *filepath, char *format, char 
 						 " -o <diagnose-file>\n\n\t-i\tspecify the path to the image to be analised"
 						 "\n\t-f\tthe format of the input image\n\t-o\tpath to the diagnosis"
 						 " file\n\nExample of usage:\n"
-						 "./catarata -i res/Catarata.ppm -f ppm -o tests/Catarata_Diag.ppm\n\n");
+						 "./catarata -i res/Catarata.ppm -f ppm -o diagnosis.txt\n\n");
 					exit(1);
 				}
 
-				diagFile = (char *) argv[i+1];
+				diagFile = strcpy(diagFile, (char *) argv[i+1]);
 				diagFile_bool = true;
 			}
 
@@ -70,12 +70,14 @@ void checkArgs(int argc, char const *argv[], char *filepath, char *format, char 
 
 		if (!format_bool) {
 			printf("\n\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No format specified, defaulting to 'ppm'.\n");
-			format = "ppm";
+			format = realloc(format, 4);
+			strcpy(format, "ppm");
 		}
 
 		if (!diagFile_bool) {
 			printf("\e[1m\x1b[33mWARNING\e[0m\x1b[0m: No diagnosis file specified, defaulting to 'diagnosis.txt'.\n\n");
-			diagFile = "diagnosis.txt";
+			diagFile = realloc(diagFile, 14);
+			strcpy(diagFile, "diagnosis.txt");
 		}
 
 		if (format_bool && argc%2 == 0) {
@@ -90,11 +92,14 @@ void checkArgs(int argc, char const *argv[], char *filepath, char *format, char 
 		indexes on a variable, so we can access them any time we want */
 		for (uchar i = 0; i < argc; ++i) {
 			if (!strcmp(argv[i], "-i")) {
-				filepath = (char *) argv[i+1];
+				filepath = realloc(filepath, strlen(argv[i+1]) + 1);
+				strcpy(filepath, (char *) argv[i+1]);
 			} else if (!strcmp(argv[i], "-f")) {
-				format = (char *) argv[i+1];
+				format = realloc(format, strlen(argv[i+1]) + 1);
+				strcpy(format, (char *) argv[i+1]);
 			} else if (!strcmp(argv[i], "-o")) {
-				diagFile = (char *) argv[i+1];
+				diagFile = realloc(diagFile, strlen(argv[i+1]) + 1);
+				strcpy(diagFile, (char *) argv[i+1]);
 			}
 		}
 	}
@@ -156,7 +161,7 @@ char *outFilepath(char *folder, char *filename, char *toCat, char *format)
 }
 
 // this allocates a new Pixel **
-Pixel **allocatePixel(int height, int width)
+Pixel **allocatePixel(ushort height, ushort width)
 {
 	Pixel **pixels = (Pixel **) calloc(height, sizeof(Pixel *));
 	for (int i = 0; i < height; ++i) {
@@ -167,7 +172,7 @@ Pixel **allocatePixel(int height, int width)
 }
 
 // this allocates a new bool **
-bool **allocateBinPixel(int height, int width)
+bool **allocateBinPixel(ushort height, ushort width)
 {
 	bool **pixels = (bool **) calloc(height, sizeof(bool *));
 	for (int i = 0; i < height; i++) {
@@ -177,7 +182,7 @@ bool **allocateBinPixel(int height, int width)
 }
 
 // this allocates a new Img *
-Img *createImg(int height, int width, uchar max_rgb)
+Img *createImg(ushort height, ushort width, uchar max_rgb)
 {
 	Img *newImg = (Img *) calloc(1, sizeof(Img));
 	newImg->height = height;
@@ -189,7 +194,7 @@ Img *createImg(int height, int width, uchar max_rgb)
 	return newImg;
 }
 
-ImgBin *createImgBin(int height, int width){
+ImgBin *createImgBin(ushort height, ushort width){
 	ImgBin *newImgBin = (ImgBin *) calloc(1, sizeof(ImgBin));
 	newImgBin->height = height;
 	newImgBin->width = width;
@@ -202,7 +207,7 @@ ImgBin *createImgBin(int height, int width){
 // this converts a ppm image (with rgb) to pbm image (with 0,1)
 // its currently designed to recieve a ppm Img with threshold applied already, so the values are or 0, or 255
 // * currently not tested *
-ImgBin *convertPPtoPB(Img *original){
+ImgBin *convertImg(Img *original){
 	ImgBin *converted = (ImgBin *) calloc(1, sizeof(ImgBin));
 	converted->height = original->height;
 	converted->width = original->width;

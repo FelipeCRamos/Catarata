@@ -4,7 +4,7 @@
 
 Img *readPPM(char *filepath)
 {
-	puts("Reading the image...\n");
+	puts("\e[1mReading the input image...\e[0m\n");
 	FILE *image;
 	char buffer[16];
 	ushort height, width;
@@ -93,9 +93,9 @@ Img *readPPM(char *filepath)
 			There shoud be $width times $height pixels.
 	*/
 	int loaded_pixels = 0;
-	for(int i = 0; i < img->height; ++i) {
-		for(int j = 0; j < img->width; ++j) {
-			fscanf(image, "%hu\n%hu\n%hu\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
+	for (int i = 0; i < img->height; ++i) {
+		for (int j = 0; j < img->width; ++j) {
+			fscanf(image, "%hhu\n%hhu\n%hhu\n", &img->pixels[i][j].r, &img->pixels[i][j].g, &img->pixels[i][j].b);
 			++loaded_pixels;
 			// if you want to see it for yourself in action, uncomment the next line
 			// printf("rgb(%i,%i,%i)\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
@@ -103,7 +103,7 @@ Img *readPPM(char *filepath)
 	}
 
 	// check if the number of pixels loaded equals to the number of real pixels.
-	if(!(loaded_pixels == img->height * img->width)) {
+	if (!(loaded_pixels == img->height * img->width)) {
 		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i').\n", img->height * img->width, loaded_pixels);
 		fclose(image);
 		freeImg(img);
@@ -112,15 +112,16 @@ Img *readPPM(char *filepath)
 		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
-	printf("\nFinished reading image...\n");
+	puts("\n\e[1mFinished reading image...\e[0m");
 
 	fclose(image);
 	free(strippedFilepath);
 	return img;
 }
 
-ImgBin *readPBM(char *filepath){
-	puts("Reading the image...\n");
+ImgBin *readPBM(char *filepath)
+{
+	puts("\e[1mReading the binary image...\e[0m\n");
 	FILE *image;
 	char buffer[16];
 	ushort height, width;
@@ -205,10 +206,10 @@ ImgBin *readPBM(char *filepath){
 	*/
 	int loaded_pixels = 0;
 	int temp_pixel;
-	for(int i = 0; i < img->height; ++i) {
-		for(int j = 0; j < img->width; ++j) {
+	for (int i = 0; i < img->height; ++i) {
+		for (int j = 0; j < img->width; ++j) {
 			fscanf(image, "%i", &temp_pixel);
-			if(temp_pixel >= 0 && temp_pixel <= 1){
+			if (temp_pixel >= 0 && temp_pixel <= 1){
 				img->pixels[i][j] = temp_pixel;
 			}
 			++loaded_pixels;
@@ -218,7 +219,7 @@ ImgBin *readPBM(char *filepath){
 	}
 
 	// check if the number of pixels loaded equals to the number of real pixels.
-	if(!(loaded_pixels == img->height * img->width)) {
+	if (!(loaded_pixels == img->height * img->width)) {
 		fprintf(stderr, "Couldn't load correcly the pixel matrix (should be '%i' pixels, instead, got '%i').\n", img->height * img->width, loaded_pixels);
 		fclose(image);
 		freeImgBin(img);
@@ -227,7 +228,7 @@ ImgBin *readPBM(char *filepath){
 		printf("Correctly loaded %i pixels.\n", loaded_pixels);
 	}
 	
-	printf("\nFinished reading image...\n");
+	printf("\n\e[1mFinished reading the binary image...\e[0m\n");
 
 	fclose(image);
 	free(strippedFilepath);

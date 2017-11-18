@@ -31,10 +31,12 @@ void writePPM(Img *img, char *filepath)
 }
 
 // a write pbm func that recieves a ImgBin *
-void writePBM_PBM(ImgBin *img, char *filepath){
+void writePBM_PBM(ImgBin *img, char *filepath)
+{
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
 	int *pixel = (int *)calloc(1, sizeof(bool));
+
 	if (!outImage) {
 		perror(filepath);
 	}
@@ -46,28 +48,29 @@ void writePBM_PBM(ImgBin *img, char *filepath){
 	fprintf(outImage, "%hu %hu\n", img->width, img->height);
 
 	// writing all of the binary values of each pixel of the image
-	for (int i = 0; i < img->height; i++){
-		for (int j = 0; j < img->width; j++){
-
+	for (int i = 0; i < img->height; i++) {
+		for (int j = 0; j < img->width; j++) {
 			fprintf(outImage, "%i ", *pixel);
-			if(*pixel >= 0 && *pixel <= 1){
+			if (*pixel >= 0 && *pixel <= 1) {
 				img->pixels[i][j] = *pixel;
 			} else {
 				fprintf(stderr, "Value %i is not a bool (it shoud be, it's a PBM)", *pixel);
 			}
-			
 		}
 		fprintf(outImage, "\n");
 	}
+
 	fclose(outImage);
 	free(pixel);
 }
 
 // a write pbm func that recieves a Img *
-void writePPM_PBM(Img *img, char *filepath){
+void writePPM_PBM(Img *img, char *filepath)
+{
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
 	int pixel;
+
 	if (!outImage) {
 		perror(filepath);
 	}
@@ -79,11 +82,11 @@ void writePPM_PBM(Img *img, char *filepath){
 	fprintf(outImage, "%hu %hu\n", img->width, img->height);
 
 	// writing all of the binary values of each pixel of the image
-	for (int i = 0; i < img->height; i++){
-		for (int j = 0; j < img->width; j++){
-			if(img->pixels[i][j].r == img->max_rgb){
+	for (int i = 0; i < img->height; i++) {
+		for (int j = 0; j < img->width; j++) {
+			if (img->pixels[i][j].r == img->max_rgb) {
 				pixel = 0;
-			}else{
+			} else {
 				pixel = 1;
 			}
 			fprintf(outImage, "%i ", pixel);
@@ -91,5 +94,4 @@ void writePPM_PBM(Img *img, char *filepath){
 		fprintf(outImage, "\n");
 	}
 	fclose(outImage);
-
 }

@@ -9,7 +9,9 @@ Img *gaussianFilter(Img *originalImg, uchar limit);
 
 Img *sobelFilter(Img *originalImg, uchar limit);
 
-Img *threshold(Img *originalImg, unsigned int intensity);
+Img *threshold(Img *originalImg, uchar intensity);
+
+Img *otsuMethod(Img *img);
 // TODO
 
 #endif

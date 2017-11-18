@@ -19,12 +19,13 @@
 #define MAX_RGB 255
 #define ushort unsigned short
 #define uchar unsigned char
+#define uint unsigned int
 
 typedef struct Pixel_t
 {
-	ushort r; // red
-	ushort g; // green
-	ushort b; // blue
+	uchar r; // red
+	uchar g; // green
+	uchar b; // blue
 } Pixel;
 
 typedef struct Img_t
@@ -43,19 +44,19 @@ typedef struct ImgBin_t
 	bool **pixels;
 } ImgBin;
 
-void checkArgs(int argc, char const *argv[], char *filepath, char *format, char *diagFile);
+void checkArgs(int argc, char *argv[], char *filepath, char *format, char *diagFile);
 
 char *stripFilepath(char *filepath);
 
 char *outFilepath(char *folder, char *filename, char *toCat, char *format);
 
-Pixel **allocatePixel(int height, int width);
+Pixel **allocatePixel(ushort height, ushort width);
 
-bool **allocateBinPixel(int height, int width);
+bool **allocateBinPixel(ushort height, ushort width);
 
-Img *createImg(int height, int width, uchar max_rgb);
+Img *createImg(ushort height, ushort width, uchar max_rgb);
 
-ImgBin *createImgBin(int height, int width);
+ImgBin *createImgBin(ushort height, ushort width);
 
 ImgBin *convertImg(Img *original);
 

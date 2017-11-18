@@ -4,34 +4,34 @@
 #include "write.h" // header with only write things
 
 // Defines the DEBUG mode on/off (0/1)
-#define DEBUG 0
+#define DEBUG 1
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-	char *filepath = NULL;
-	char *format = NULL;
-	char *diagFile = NULL;
+	char *filepath = (char *) calloc(256, sizeof(char));
+	char *format = (char *) calloc(8, sizeof(char));
+	char *diagFile = (char *) calloc(256, sizeof(char));
 	// test if all the arguments were provided
 	checkArgs(argc, argv, filepath, format, diagFile);
 
-	// little welcome interface I did while bored
-	puts("     ---------------------------------------------------------------------");
-	puts("    |  _     _  _______  ___      _______  _______  __   __  _______  __  |");
-	puts("    | | | _ | ||       ||   |    |       ||       ||  |_|  ||       ||  | |");
-	puts("    | | || || ||    ___||   |    |       ||   _   ||       ||    ___||  | |");
-	puts("    | |       ||   |___ |   |    |       ||  | |  ||       ||   |___ |  | |");
-	puts("    | |       ||    ___||   |___ |      _||  |_|  ||       ||    ___||__| |");
-	puts("    | |   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___  __  |");
-	puts("    | |__| |__||_______||_______||_______||_______||_|   |_||_______||__| |");
-	puts("    |                                                                     |");
-	puts("     ---------------------------------------------------------------------");
-	puts("___                                                               _             ");
-	puts(" | _   |_|_  _   _ _ |_ _  _ _  _|_   _|. _  _  _  _  _. _   _ _ (_|_    _  _ _ ");
-	puts(" |(_)  |_| )(-  (_(_||_(_|| (_|(_|_  (_||(_|(_)| )(_)_)|_)  _)(_)| |_\\)/(_|| (- ");
-	puts("                                            _/                                  ");
-	puts("\n\n /\\   _|_|_  _  _ _.");
-	puts("/~~\\|_|| | |(_)| _\\.");
-	puts("\n - Felipe C. Ramos Filho\n - João Pedro de A. Paula\n\n\n");
+	// // little welcome interface I did while bored
+	// puts("     ---------------------------------------------------------------------");
+	// puts("    |  _     _  _______  ___      _______  _______  __   __  _______  __  |");
+	// puts("    | | | _ | ||       ||   |    |       ||       ||  |_|  ||       ||  | |");
+	// puts("    | | || || ||    ___||   |    |       ||   _   ||       ||    ___||  | |");
+	// puts("    | |       ||   |___ |   |    |       ||  | |  ||       ||   |___ |  | |");
+	// puts("    | |       ||    ___||   |___ |      _||  |_|  ||       ||    ___||__| |");
+	// puts("    | |   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___  __  |");
+	// puts("    | |__| |__||_______||_______||_______||_______||_|   |_||_______||__| |");
+	// puts("    |                                                                     |");
+	// puts("     ---------------------------------------------------------------------");
+	// puts("___                                                               _             ");
+	// puts(" | _   |_|_  _   _ _ |_ _  _ _  _|_   _|. _  _  _  _  _. _   _ _ (_|_    _  _ _ ");
+	// puts(" |(_)  |_| )(-  (_(_||_(_|| (_|(_|_  (_||(_|(_)| )(_)_)|_)  _)(_)| |_\\)/(_|| (- ");
+	// puts("                                            _/                                  ");
+	// puts("\n\n /\\   _|_|_  _  _ _.");
+	// puts("/~~\\|_|| | |(_)| _\\.");
+	// puts("\n - Felipe C. Ramos Filho\n - João Pedro de A. Paula\n\n\n");
 
 	// these are just auxiliary variables
 	char *filename = stripFilepath(filepath);
@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
 	}
 
 	// here we enter on process.c
-	puts("\nStarted processing the image...\n");
+	puts("\n\e[1mStarted processing the image...\e[0m\n");
 
 	// tone the image to its greyscale
 	Img *greyscaled = greyscale(originalImg);
@@ -70,7 +70,7 @@ int main(int argc, char const *argv[])
 	free(strippedGrey);
 
 	// blur the image with the gaussian filter
-	Img *gaussImg = gaussianFilter(greyscaled, 2);
+	Img *gaussImg = gaussianFilter(greyscaled, 1);
 
 	char *outGauss = outFilepath(outDir, filename, "_gauss", format);
 	char *strippedGauss = stripFilepath(outGauss);
@@ -95,11 +95,14 @@ int main(int argc, char const *argv[])
 	free(outSobel);
 	free(strippedSobel);
 
+	/** 
+	 * Apply threshold to sobelImg with intensity calculated through Otsu's Method
+	 * pixels bigger than the threshold will be converted to 255 and smaller than
+	 * the threshold will be converted to 0.
+	 */
+	Img *thresholdImg = otsuMethod(sobelImg);
 
-	// Apply threshold to sobelImg with intensity $value 
-	// pixels bigger than $value will be converted to 255
-	// smaller than $value will be converted to 0
-	Img *thresholdImg = threshold(sobelImg, 45);
+	putchar('\n');
 
 	char *outThreshold = outFilepath(outDir, filename, "_threshold", "pbm");
 	char *strippedThreshold = stripFilepath(outThreshold);
@@ -114,11 +117,12 @@ int main(int argc, char const *argv[])
 	// Just a test to read/write pbm
 	ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");
 	writePBM_PBM(pbmImage, "test/teste.pbm");
+
 	freeImgBin(pbmImage);
-	printf("Rodou até aqui\n");
-
-
-	freeImg(sobelImg);
+	freeImg(thresholdImg);
+	free(filepath);
 	free(filename);
+	free(format);
+	free(diagFile);
 	return 0;
 }
