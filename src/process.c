@@ -1,6 +1,6 @@
 #include "process.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 Img *greyscale(Img *img)
 {
@@ -91,12 +91,12 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 
 	Img *sobelImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 
-	// int sobel_x[3][3] = {{3, 0, -3}, {10, 0, -10}, {3, 0, -3}};
-	// int sobel_y[3][3] = {{3, 10, 3}, {0, 0, 0}, {-3, -10, -3}};
-	int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
-	int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
-	int filter_x;
-	int filter_y;
+	int sobel_x[3][3] = {{3, 0, -3}, {10, 0, -10}, {3, 0, -3}};
+	int sobel_y[3][3] = {{3, 10, 3}, {0, 0, 0}, {-3, -10, -3}};
+	// int sobel_x[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+	// int sobel_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+	float filter_x;
+	float filter_y;
 	static uchar count = 0;
 
 	for (ushort i = 0; i < sobelImg->height; ++i) {
@@ -122,16 +122,18 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 				}
 			}
 
+			float gradient = sqrt(filter_x*filter_x + filter_y*filter_y);
+
 			// here we test if the magnitude is greater then the MAX_RGB value
 			// TODO replace MAX_RGB with originalImg->max_rgb
-			if (sqrt(filter_x*filter_x + filter_y*filter_y) > MAX_RGB) {
+			if (gradient > MAX_RGB) {
 				sobelImg->pixels[i][j].r = originalImg->max_rgb;
 				sobelImg->pixels[i][j].g = originalImg->max_rgb;
 				sobelImg->pixels[i][j].b = originalImg->max_rgb;
 			} else {
-				sobelImg->pixels[i][j].r = sqrt(filter_x*filter_x + filter_y*filter_y);
-				sobelImg->pixels[i][j].g = sqrt(filter_x*filter_x + filter_y*filter_y);
-				sobelImg->pixels[i][j].b = sqrt(filter_x*filter_x + filter_y*filter_y);
+				sobelImg->pixels[i][j].r = (uchar) gradient;
+				sobelImg->pixels[i][j].g = (uchar) gradient;
+				sobelImg->pixels[i][j].b = (uchar) gradient;
 			}
 		}
 	}
@@ -161,42 +163,117 @@ Img *sobelFilter(Img *originalImg, uchar limit)
 	return sobelImg;
 }
 
-Img *threshold(Img *originalImg, unsigned int intensity){
+Img *threshold(Img *originalImg, uchar intensity)
+{
 	Img *thresholdImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
 	int pixelValue = 0;
-	for(ushort i=0; i < thresholdImg->height; i++){
-		for(ushort j=0; j < thresholdImg->width; j++){
+	for (ushort i = 0; i < thresholdImg->height; i++) {
+		for(ushort j = 0; j < thresholdImg->width; j++) {
 			// for each pixel, we will check if is bigger than X, if it is: set to max_rgb
-			if(originalImg->pixels[i][j].r >= intensity){
+			if (originalImg->pixels[i][j].r > intensity) {
 				pixelValue = thresholdImg->max_rgb;
 				// printf("Pixel [%i][%i](%i) is bigger than %i.\n", i, j, originalImg->pixels[i][j].r, intensity);
-			}else{
+			} else {
 				pixelValue = 0;
 				// printf("Pixel [%i][%i](%i) is smaller than %i.\n", i, j, thresholdImg->pixels[i][j].r, intensity);
 			}
+
 			thresholdImg->pixels[i][j].r = pixelValue;
 			thresholdImg->pixels[i][j].g = pixelValue;
 			thresholdImg->pixels[i][j].b = pixelValue;
 		}
 	}
-	printf("Threshold was successfully applied with intensity %i.\n", intensity);
+
+	printf("Threshold was successfully applied with intensity %hhu.\n", intensity);
 	freeImg(originalImg);
 	return thresholdImg;
 }
 
-// Img *BHThresholding(Img *originalImg)
-// {
-// 	Img *thresholdImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
-// 	uchar histogram[originalImg->max_rgb] = { 0 };
-// 	ushort pixel;
+Img *otsuMethod(Img *originalImg)
+{
+	Img *otsuImg = createImg(originalImg->height, originalImg->width, originalImg->max_rgb);
+	ushort max_val = originalImg->max_rgb + 1;
+	int total_pixel = originalImg->height * originalImg->width;
+	uchar threshold;
+	ushort *histogram = (ushort *) calloc(max_val, sizeof(ushort));
 
-// 	for (ushort i = 0; i < originalImg->height; ++i) {
-// 		for (ushort j = 0; j < originalImg->width; ++j) {
-// 			pixel = originalImg->
-// 		}
-// 	}
+	// Calculate the images histogram.
+	// Since we will build the array based on the pixels, we don't need the max rgb
+	uchar pixel;
+	for (ushort i = 0; i < originalImg->height; ++i) {
+		for (ushort j = 0; j < originalImg->width; ++j) {
+			pixel = originalImg->pixels[i][j].r;
+			++histogram[pixel];
+		}
+	}
 
-// 	return thresholdImg;
-// }
+	/**
+	 * Here we are using a bit faster approach to Otsu's method. With some
+	 * manipulation we can calcualte the threshold by calculating the 'between
+	 * class' variance. The threshold with the maximum 'between class' variance 
+	 * also has the minimum 'within class' variance, which allows us to calculate
+	 * the best threshold.
+	 */
+
+	// sum to calculate the foreground mean (total sum minus background sum)
+	int sum = 0;
+	for (int i = 0; i < max_val; ++i) {
+		sum += i * histogram[i];
+	}
+
+	float sumBack = 0;
+	float weightBack = 0;
+	float weightFore = 0;
+
+	float varMax = 0;
+	threshold = 0;
+
+	// here's where the magic happens
+	for (int i = 0; i < max_val; ++i) {
+		// background weight
+		weightBack += histogram[i];
+		if (weightBack == 0) continue;
+
+		// foreground weight
+		weightFore = total_pixel - weightBack;
+		if (weightFore == 0) break;
+
+		// background sum
+		sumBack += (float) (i * histogram[i]);
+
+		// mean background and foreground
+		float meanBack = sumBack / weightBack;
+		float meanFore = (sum - sumBack) / weightFore;
+
+		// this is the 'between class' calculation
+		float varBetween = (float) weightBack * (float) weightFore * (meanBack - meanFore) * (meanBack - meanFore);
+
+		// check if we have a new max value
+		if (varBetween > varMax) {
+			varMax = varBetween;
+			threshold = i;
+		}
+	}
+
+	// here we set the return Img's pixels to be 0 or 1 (255)
+	uchar pixelValue;
+	for (ushort i = 0; i < originalImg->height; ++i) {
+		for (ushort j = 0; j < originalImg->width; ++j) {
+			if (originalImg->pixels[i][j].r > threshold) {
+				pixelValue = originalImg->max_rgb;
+			} else {
+				pixelValue = 0;
+			}
+
+			otsuImg->pixels[i][j].r = pixelValue;
+			otsuImg->pixels[i][j].g = pixelValue;
+			otsuImg->pixels[i][j].b = pixelValue;
+		}
+	}
+
+	free(histogram);
+	free(originalImg);
+	return otsuImg;
+}
 
 // TODO hough transform
