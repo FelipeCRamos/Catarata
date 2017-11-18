@@ -15,7 +15,7 @@ bindir = ./bin
 
 # Macros
 CC = gcc
-CFLAGS = -Wall -g -ggdb -std=c11 -lm -I. -I$(incdir)
+CFLAGS = -Wall -Wextra -g -ggdb -std=c11 -lm -I. -I$(incdir)
 RM = -rm 
 OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 
@@ -47,7 +47,7 @@ write: $(objdir)/write.o
 # Compiles the main
 $(bindir)/main: $(srcdir)/main.c $(OBJS)
 	mkdir -p $(bindir)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $^ -o $@
 
 # Builds only the util module
 $(objdir)/util.o: $(srcdir)/util.c $(incdir)/util.h
@@ -79,7 +79,7 @@ cleanbin:
 
 # Removes all images
 cleanimg:
-	$(RM) ./test/*.ppm
+	$(RM) ./test/*
 
 # Removes all executables and all objects
 clean: cleanobj cleanbin cleanimg
