@@ -114,11 +114,13 @@ int main(int argc, char *argv[])
 	free(outThreshold);
 	free(strippedThreshold);
 
-	// Just a test to read/write pbm
-	ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");
-	writePBM_PBM(pbmImage, "test/teste.pbm");
+	houghMethod(convertImg(thresholdImg));
 
-	freeImgBin(pbmImage);
+	// Just a test to read/write pbm
+	// ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");
+	// writePBM_PBM(pbmImage, "test/teste.pbm");
+
+	// freeImgBin(pbmImage);
 	freeImg(thresholdImg);
 	free(filepath);
 	free(filename);

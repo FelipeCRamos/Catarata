@@ -12,6 +12,7 @@ Img *sobelFilter(Img *originalImg, uchar limit);
 Img *threshold(Img *originalImg, uchar intensity);
 
 Img *otsuMethod(Img *img);
-// TODO
+
+Circles *houghMethod(ImgBin *img);
 
 #endif

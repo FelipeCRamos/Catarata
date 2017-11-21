@@ -44,6 +44,22 @@ typedef struct ImgBin_t
 	bool **pixels;
 } ImgBin;
 
+// Exclusives to Hough Method
+typedef struct Circles_t
+{
+	int count;
+	int ***accumulator;
+} Circles;
+
+/* 
+	When hough finishes his job, will return a CirclesPos Matrix
+	made of circles.
+	Each circle haves a xPos (center on axis x), an yPos (center on axis y)
+	and a ratio.
+*/
+
+// eof
+
 void checkArgs(int argc, char *argv[], char *filepath, char *format, char *diagFile);
 
 char *stripFilepath(char *filepath);
@@ -54,9 +70,13 @@ Pixel **allocatePixel(ushort height, ushort width);
 
 bool **allocateBinPixel(ushort height, ushort width);
 
+int ***allocateCircle(ushort height, ushort width, int ratio);
+
 Img *createImg(ushort height, ushort width, uchar max_rgb);
 
 ImgBin *createImgBin(ushort height, ushort width);
+
+Circles *createCircles(ushort height, ushort width, int ratio);
 
 ImgBin *convertImg(Img *original);
 

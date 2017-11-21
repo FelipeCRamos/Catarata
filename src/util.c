@@ -181,6 +181,19 @@ bool **allocateBinPixel(ushort height, ushort width)
 	return pixels;
 }
 
+// this allocates a new circle
+int ***allocateCircle(ushort height, ushort width, int ratio)
+{
+	int ***circles = (int ***) calloc(height, sizeof(int **));
+	for (int i = 0; i < height; ++i) {
+		circles[i] = (int **) calloc(width, sizeof(int *));
+		for (int j = 0; j < width; j++){
+			circles[i][j] = (int *) calloc(ratio, sizeof(int));
+		}
+	}
+	return circles;
+}
+
 // this allocates a new Img *
 Img *createImg(ushort height, ushort width, uchar max_rgb)
 {
@@ -202,6 +215,14 @@ ImgBin *createImgBin(ushort height, ushort width){
 	newImgBin->pixels = allocateBinPixel(height, width);
 
 	return newImgBin;
+}
+
+Circles *createCircles(ushort height, ushort width, int ratio)
+{
+	Circles *newCircles = (Circles *) calloc(1, sizeof(Circles));
+	newCircles->count = 0;
+	newCircles->accumulator = allocateCircle(height, width, ratio);
+	return newCircles;
 }
 
 // this converts a ppm image (with rgb) to pbm image (with 0,1)
