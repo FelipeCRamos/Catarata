@@ -264,3 +264,30 @@ void freeImgBin(ImgBin *img)
 	free(img->pixels);
 	free(img);
 }
+
+double *preCalcSin(){
+	double pi = 3.14;
+	double *list = (double *) calloc (360, sizeof(double));
+	for(unsigned short int i = 0; i < 360; i++){
+		list[i] = sin(pi/180.0*i);
+	}
+	return(list);
+}
+double *preCalcCos(){
+	double pi = 3.14;
+	double *list = (double *) calloc (360, sizeof(double));
+	for(unsigned short int i = 0; i < 360; i++){
+		list[i] = cos(pi/180.0*i);
+	}
+	return(list);
+}
+
+int *preCalcAux(int rmin, int rmax, int total){
+	int *list = (int *) calloc (rmax-rmin, sizeof(int));
+	for(unsigned short int i = 0; i < rmax-rmin; i++){
+		list[i] = rmin+i * total;
+	}
+	return(list);
+}
+
+

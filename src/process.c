@@ -288,53 +288,57 @@ Circles *houghMethod(ImgBin *img)
 {
 		int rmin = (img->width + img->height - bigger(img->width,img->height))/17; // Minimal ratio that we will use
 		int rmax = (img->width + img->height - bigger(img->width,img->height))/4; // Just a test value
-		// int rmin = 10, rmax = 20;
+		
+		// int rmin = 100, rmax = 600;
 		int a, b;
 		double pi = 3.14159;
 
+		printf("rmin: %i;\n", rmin);
+		printf("rmax: %i;\n", rmax);
+
 		Circles *acc = createCircles(img->height, img->width, rmax-rmin+1);
+		double *sin = preCalcSin();
+		double *cos = preCalcCos();
+		int total = img->height * img->width;
 
-
+		int *aux = preCalcAux(rmin, rmax, total);
+		int aux2;
 
 		for(int y = 0; y < img->height; y++){
-			printf("Processando linha %i de %i...\n", y+1, img->height);
+			// printf("Processando linha %i de %i...\n", y+1, img->height);
 			for(int x = 0; x < img->width; x++){
-				a = 0, b = 0;
-				// printf("Tentando acessar: img->pixels[%i][%i]..\n", y, x);
+
+				// a = 0, b = 0;
 				if(img->pixels[y][x] == 1){
-					// printf("Entrou no if\n");
-					for(int r = rmin; r <= rmax; r++){
-						for(int theta = 0; theta <= 360; theta++){
-							a = x + r * cos(theta * pi/180);
-							// printf("\t\ta = %d\n", a);
-							b = y - r * sin(theta * pi/180);
-							// printf("\t\tb = %d\n", b);
-							if(a >= 0 && b >= 0){
-								if( a <= img->height && b <= img->width){
-									acc->accumulator[b][a][r-rmin] += 1;
-								}
-							}
-							
+					for(int r = rmin; r <= rmax; r+= 5){
+						// aux = (r-rmin) * total;
+						aux2 = aux[rmax-rmin+r];
+						for(int theta = 0; theta < 360; theta+= 15){
+							a = x + r * cos[theta];	
+							b = y - r * sin[theta];
+
+							if((a >= 0 && b >= 0) && (a < img->width && b < img->height)){
+									// printf("\n(A: %i, B: %i)", a, b); /* debug printf */
+									acc->accumulator[b][a][r] += 1;
+							}							
 						}
 					}
-					// printf("\tacc->accumulator[%i][%i][%i] = %i\n", y, x, rmax, acc->accumulator[y][x][rmin]);
 				}
 			}
 		}
-
-
-		for (int i = 0; i < img->height; ++i)
+		
+/*		for (int i = 0; i < img->height; ++i)
 		{
 			for (int j = 0; j < img->width; ++j)
 			{
 				for (int k = 0; k < rmax-rmin+1; ++k)
 				{
-					printf("A[%i][%i][%i] = %i\n", i, j, k, acc->accumulator[i][j][k]);
+					if(acc->accumulator[i][j][k] != 0) printf("A[%i][%i][%i] = %i\n", i, j, k, acc->accumulator[i][j][k]);
 				}
 			}
 		}
-
-	return acc;
+*/		
+	return(acc);
 }
 
 

@@ -84,4 +84,8 @@ void freeImg(Img *img);
 
 void freeImgBin(ImgBin *img);
 
+double *preCalcCos();
+double *preCalcSin();
+int *preCalcAux(int rmin, int rmax, int total);
+
 #endif
