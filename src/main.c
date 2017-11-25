@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 	putchar('\n');
 
 	Img *originalImg = readPPM(filepath);
+	// Img tempOriginal = *originalImg;
 	// TODO different reading and writing functions for different formats
 	
 	if (!originalImg) {
@@ -113,8 +114,10 @@ int main(int argc, char *argv[])
 	}
 	free(outThreshold);
 	free(strippedThreshold);
-
-	houghMethod(convertImg(thresholdImg));
+	
+	Img *tempOriginal = readPPM(filepath);
+	houghMethod(convertImg(thresholdImg), tempOriginal);
+	// writePPM(tempOriginal, "test/original.ppm");
 
 	// Just a test to read/write pbm
 	// ImgBin *pbmImage = readPBM("test/Catarata_threshold.pbm");

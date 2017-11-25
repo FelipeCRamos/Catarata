@@ -276,7 +276,7 @@ Img *otsuMethod(Img *originalImg)
 	return otsuImg;
 }
 
-int bigger(num1, num2){
+int bigger(int num1, int num2){
 	if (num1 > num2){
 		return num1;
 	} else {
@@ -284,60 +284,83 @@ int bigger(num1, num2){
 	}
 }
 
-Circles *houghMethod(ImgBin *img)
+Circles *houghMethod(ImgBin *img, Img *testImage)
 {
-		int rmin = (img->width + img->height - bigger(img->width,img->height))/17; // Minimal ratio that we will use
-		int rmax = (img->width + img->height - bigger(img->width,img->height))/4; // Just a test value
 		
+		int rmax = (img->width + img->height - bigger(img->width,img->height))/4; // Just a test value
+		int rmin_iris = (img->width + img->height - bigger(img->width,img->height))/8;
+		int rmin = (img->width + img->height - bigger(img->width,img->height))/17; // Minimal ratio that we will use
 		// int rmin = 100, rmax = 600;
 		int a, b;
 		double pi = 3.14159;
 
-		printf("rmin: %i;\n", rmin);
-		printf("rmax: %i;\n", rmax);
+		printf("DEBUG MESSAGE:\trmin: %i;\n", rmin);
+		printf("DEBUG MESSAGE:\trmin_iris: %i\n", rmin_iris);
+		printf("DEBUG MESSAGE:\trmax: %i;\n", rmax);
 
 		Circles *acc = createCircles(img->height, img->width, rmax-rmin+1);
 		double *sin = preCalcSin();
 		double *cos = preCalcCos();
 		int total = img->height * img->width;
 
-		int *aux = preCalcAux(rmin, rmax, total);
-		int aux2;
-
 		for(int y = 0; y < img->height; y++){
-			// printf("Processando linha %i de %i...\n", y+1, img->height);
+			/* Just a informer line */
+			if(y % 50 == 0) printf("Processando linha %i de %i...\n", y+1, img->height);
+			
 			for(int x = 0; x < img->width; x++){
-
-				// a = 0, b = 0;
-				if(img->pixels[y][x] == 1){
-					for(int r = rmin; r <= rmax; r+= 5){
-						// aux = (r-rmin) * total;
-						aux2 = aux[rmax-rmin+r];
+				if(img->pixels[y][x] == 0){
+					for(int r = rmin; r <= rmax; r+= 1){
 						for(int theta = 0; theta < 360; theta+= 15){
-							a = x + r * cos[theta];	
+							// real_tot = (r-rmin) * total;
+							a = x - r * cos[theta];	
 							b = y - r * sin[theta];
-
+							/* if 'a' and 'b' are into the limits
+							(bigger than 0 and smaller than height/width) */
 							if((a >= 0 && b >= 0) && (a < img->width && b < img->height)){
-									// printf("\n(A: %i, B: %i)", a, b); /* debug printf */
-									acc->accumulator[b][a][r] += 1;
-							}							
+								acc->accumulator[b][a][r-rmin]++;
+							}					
 						}
 					}
 				}
 			}
 		}
-		
-/*		for (int i = 0; i < img->height; ++i)
+		printf("\nAccumulator done, trying to discover max value...\n");
+		// Discover the biggest value on accumulator
+		int max = 0;
+		for (int y = 0; y < img->height; ++y)
 		{
-			for (int j = 0; j < img->width; ++j)
-			{
-				for (int k = 0; k < rmax-rmin+1; ++k)
-				{
-					if(acc->accumulator[i][j][k] != 0) printf("A[%i][%i][%i] = %i\n", i, j, k, acc->accumulator[i][j][k]);
+			for (int x = 0; x < img->width; ++x){
+				for (int r = rmin; r <= rmax; r += 2){
+					// printf("Trying to acess %i,%i,%i\n", i, j, k);
+					max = bigger(max, acc->accumulator[y][x][r-rmin]);
 				}
 			}
 		}
-*/		
+		printf("DEBUG MESSAGE:\tmax: %i\n", max);
+
+		// Calculates the center of the _circle_ by the mean of close range "maxes";
+		int counter = 0, xCenter = 0, yCenter = 0;
+		for(int y = rmax; y < img->height-rmax; y++){
+			for(int x = rmax; x < img->width-rmax; x++){
+				for(int r = rmin; r <= rmax; r += 2){
+					if(y < 0 || y < 0) printf("Deu valor negativo (%i, %i)\n", y, x);
+					if(acc->accumulator[y][x][r-rmin] >= (0.875 * max)){
+						// if(y < 0 || y < 0 || r-rmin < 0) printf("(%i, %i)(%i) -> %i\n", i, j, r-rmin, acc->accumulator[i][j][r-rmin]);
+						counter++;
+						yCenter += y;
+						xCenter += x;
+					}
+				}
+			}
+		}
+		double ymax = yCenter/(double)counter;
+		double xmax = xCenter/(double)counter;
+
+		printf("DEBUG MESSAGE:\tymax: %.3lf\nDEBUG MESSAGE:\txmax: %.3lf\n", ymax, xmax);
+		Box *box = createBox(ymax, xmax, rmin_iris);
+		drawBox(testImage, "test/teste_box.ppm", box);
+
+
 	return(acc);
 }
 

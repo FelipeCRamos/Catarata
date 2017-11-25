@@ -58,6 +58,19 @@ typedef struct Circles_t
 	and a ratio.
 */
 
+typedef struct Center_t
+{
+	int x;
+	int y;
+	int r;
+} Center;
+
+typedef struct Box_t
+{
+	int xCenter, yCenter;
+	int radius;
+} Box;
+
 // eof
 
 void checkArgs(int argc, char *argv[], char *filepath, char *format, char *diagFile);
@@ -84,8 +97,10 @@ void freeImg(Img *img);
 
 void freeImgBin(ImgBin *img);
 
+// Funcs for Hough Method
 double *preCalcCos();
 double *preCalcSin();
-int *preCalcAux(int rmin, int rmax, int total);
+Center *createCenter(int x, int y, int r);
+Box *createBox(int xCenter, int yCenter, int radius);
 
 #endif

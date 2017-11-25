@@ -282,12 +282,18 @@ double *preCalcCos(){
 	return(list);
 }
 
-int *preCalcAux(int rmin, int rmax, int total){
-	int *list = (int *) calloc (rmax-rmin, sizeof(int));
-	for(unsigned short int i = 0; i < rmax-rmin; i++){
-		list[i] = rmin+i * total;
-	}
-	return(list);
+Center *createCenter(int x, int y, int r){
+	Center *center = (Center *) calloc (1, sizeof(Center));
+	center->x = x;
+	center->y = y;
+	center->r = r;
+	return(center);
 }
 
+Box *createBox(int xCenter, int yCenter, int radius){
+	Box *box = (Box *) calloc (1, sizeof(Box));
+	box->xCenter = xCenter, box->yCenter = yCenter, box->radius = radius;
+	printf("\nDEBUG MESSAGE:\tx: %i y: %i r: %i\n", box->xCenter, box->yCenter, box->radius);
+	return(box);
+}
 
