@@ -13,6 +13,6 @@ Img *threshold(Img *originalImg, uchar intensity);
 
 Img *otsuMethod(Img *img);
 
-Iris *houghMethod(ImgBin *img, Img *testImg, char *filename);
+Circles *houghMethod(ImgBin *img);
 
 #endif

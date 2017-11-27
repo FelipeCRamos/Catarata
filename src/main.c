@@ -103,16 +103,10 @@ int main(int argc, char *argv[])
 	 */
 	// Img *thresholdImg = otsuMethod(sobelImg);
 
-	/* OPTIMAL SETTINGS:
 
-		Catarata2.ppm -> threshold: 40%
-		Catarata.ppm -> threshold: 40%
+	int intensity = 0.40 * 255; // default intensy
 
-		Normal.ppm -> threshold: 23%
-		Normal2.ppm -> threshold: 50%
-	*/
-	printf("\n\n\nFILENAME: %s", filename);
-	int intensity = 0.40 * 255;
+	// OPTIMAL SETTINGS
 	if (strcmp(filename, "Catarata.ppm") == 0) intensity = 0.40 * 255;
 	if (strcmp(filename, "Catarata2.ppm") == 0) intensity = 0.40 * 255;
 	if (strcmp(filename, "Normal.ppm") == 0) intensity = 0.23 * 255;
@@ -136,7 +130,11 @@ int main(int argc, char *argv[])
 	free(strippedThreshold);
 	
 	Img *tempOriginal = readPPM(filepath);
-	houghMethod(convertImg(thresholdImg), tempOriginal, filename);
+	Circles *circles = houghMethod(convertImg(thresholdImg));
+
+	drawIris(tempOriginal, outFilepath(outDir, filename, "_iris", "pbm"), circles->iris);
+	segIris(tempOriginal, outFilepath(outDir, filename, "_seg_iris", "pbm"), circles->iris);
+
 	// writePPM(tempOriginal, "test/original.ppm");
 
 	// Just a test to read/write pbm

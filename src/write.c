@@ -96,63 +96,6 @@ void writePPM_PBM(Img *img, char *filepath)
 	fclose(outImage);
 }
 
-void drawBox(Img *img, char *filepath, Box *box){
-	FILE *outImage;
-	outImage = fopen(filepath, "w");
-	int pixel;
-
-	if (!outImage) {
-		perror(filepath);
-	}
-
-	// imagem format and creators comment
-	fprintf(outImage, "P3\n# CREATED BY FELIPE RAMOS & JOAO PEDRO\n");
-
-	// width and height of the image
-	fprintf(outImage, "%hu %hu\n", img->width, img->height);
-
-	// the maximum rgb value of the image
-	fprintf(outImage, "%i\n", img->max_rgb);
-
-	// making calculations
-	int xS, yS, xE, yE;
-/*	
-	int xC, yC;
-	xC = 500;
-	yC = 500;
-	int r = 300;
-*/	
-	xS = box->xCenter - box->radius;
-	yS = box->yCenter - box->radius;
-
-	xE = box->xCenter + box->radius;
-	yE = box->yCenter + box->radius;
-/*	
-	xS = 300;
-	yS = 200;
-
-	xE = 800;
-	yE = 600;
-*/
-
-
-	printf("\nStarting to write, values are:\n");
-	printf("S: %ix%i\nE: %ix%i\n\n", xS, yS, xE, yE);
-
-	// writing all of the rgb values of each pixel of the image
-	for (int i = 0; i < img->height; ++i) {
-		for (int j = 0; j < img->width; ++j) {
-			if((i >= yS && j >= xS) && (i <= yE && j <= xE)){
-				fprintf(outImage, "%i\n%i\n%i\n", 255, 10, 10);
-			} else {
-				fprintf(outImage, "%i\n%i\n%i\n", img->pixels[i][j].r, img->pixels[i][j].g, img->pixels[i][j].b);
-			}
-		}
-	}
-
-	fclose(outImage);
-}
-
 void drawIris(Img *img, char *filepath, Iris *iris){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
@@ -172,25 +115,8 @@ void drawIris(Img *img, char *filepath, Iris *iris){
 	fprintf(outImage, "%i\n", img->max_rgb);
 
 	// making calculations
-	int xS, yS, xE, yE;
-/*	
-	int xC, yC;
-	xC = 500;
-	yC = 500;
-	int r = 300;
-*/	
-	xS = iris->x - iris->rad;
-	yS = iris->y - iris->rad;
+	int xS = iris->x - iris->rad, yS = iris->y - iris->rad, xE = iris->x + iris->rad, yE = iris->y + iris->rad;
 
-	xE = iris->x + iris->rad;
-	yE = iris->y + iris->rad;
-	// (start_X-r)*(start_X-r) + (start_Y-r)*(start_Y-r) <= r*r
-	// (xS * xS + yS * yS) <= iris->rad * iris->rad 
-
-	// printf("\nStarting to write, values are:\n");
-	// printf("S: %ix%i\nE: %ix%i\n\n", xS, yS, xE, yE);
-
-	// writing all of the rgb values of each pixel of the image
 	for (int i = 0; i < img->height; ++i) {
 		for (int j = 0; j < img->width; ++j) {
 
@@ -270,28 +196,11 @@ void segIris(Img *img, char *filepath, Iris *iris){
 	fprintf(outImage, "%i\n", img->max_rgb);
 
 	// making calculations
-	int xS, yS, xE, yE;
-/*	
-	int xC, yC;
-	xC = 500;
-	yC = 500;
-	int r = 300;
-*/	
-	xS = iris->x - iris->rad;
-	yS = iris->y - iris->rad;
-
-	xE = iris->x + iris->rad;
-	yE = iris->y + iris->rad;
-	// (start_X-r)*(start_X-r) + (start_Y-r)*(start_Y-r) <= r*r
-	// (xS * xS + yS * yS) <= iris->rad * iris->rad 
-
-	// printf("\nStarting to write, values are:\n");
-	// printf("S: %ix%i\nE: %ix%i\n\n", xS, yS, xE, yE);
+	int xS = iris->x - iris->rad, yS = iris->y - iris->rad, xE = iris->x + iris->rad, yE = iris->y + iris->rad;
 
 	// writing all of the rgb values of each pixel of the image
 	for (int i = 0; i < img->height; ++i) {
 		for (int j = 0; j < img->width; ++j) {
-
 			/* FORMULAS */
 			/* 
 				TO GET THE OUTLINE OF THE CIRCLE:

@@ -45,11 +45,11 @@ typedef struct ImgBin_t
 } ImgBin;
 
 // Exclusives to Hough Method
-typedef struct Circles_t
+typedef struct Accumulator_t
 {
-	int count;
+	// int count;
 	int ***accumulator;
-} Circles;
+} Acc;
 
 /* 
 	When hough finishes his job, will return a CirclesPos Matrix
@@ -58,23 +58,15 @@ typedef struct Circles_t
 	and a ratio.
 */
 
-typedef struct Center_t
-{
-	int x;
-	int y;
-	int r;
-} Center;
-
-typedef struct Box_t
-{
-	int xCenter, yCenter;
-	int radius;
-} Box;
-
 typedef struct Iris_t
 {
 	int x, y, rad;
 } Iris;
+
+typedef struct Circles_t
+{
+	Iris *iris;
+} Circles;
 
 // eof
 
@@ -88,13 +80,13 @@ Pixel **allocatePixel(ushort height, ushort width);
 
 bool **allocateBinPixel(ushort height, ushort width);
 
-int ***allocateCircle(ushort height, ushort width, int ratio);
+int ***allocateAcc(ushort height, ushort width, int rad);
 
 Img *createImg(ushort height, ushort width, uchar max_rgb);
 
 ImgBin *createImgBin(ushort height, ushort width);
 
-Circles *createCircles(ushort height, ushort width, int ratio);
+Acc *createAcc(ushort height, ushort width, int rad);
 
 ImgBin *convertImg(Img *original);
 
@@ -106,8 +98,6 @@ void freeImgBin(ImgBin *img);
 double *preCalcCos();
 double *preCalcSin();
 
-Center *createCenter(int x, int y, int r);
-Box *createBox(int xCenter, int yCenter, int radius);
 Iris *createIris(int x, int y, int rad);
 
 #endif

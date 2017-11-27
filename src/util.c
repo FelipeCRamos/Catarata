@@ -182,16 +182,16 @@ bool **allocateBinPixel(ushort height, ushort width)
 }
 
 // this allocates a new circle
-int ***allocateCircle(ushort height, ushort width, int ratio)
+int ***allocateAcc(ushort height, ushort width, int rad)
 {
-	int ***circles = (int ***) calloc(height, sizeof(int **));
+	int ***accumulator = (int ***) calloc(height, sizeof(int **));
 	for (int i = 0; i < height; ++i) {
-		circles[i] = (int **) calloc(width, sizeof(int *));
+		accumulator[i] = (int **) calloc(width, sizeof(int *));
 		for (int j = 0; j < width; j++){
-			circles[i][j] = (int *) calloc(ratio, sizeof(int));
+			accumulator[i][j] = (int *) calloc(rad, sizeof(int));
 		}
 	}
-	return circles;
+	return accumulator;
 }
 
 // this allocates a new Img *
@@ -217,12 +217,11 @@ ImgBin *createImgBin(ushort height, ushort width){
 	return newImgBin;
 }
 
-Circles *createCircles(ushort height, ushort width, int ratio)
+Acc *createAcc(ushort height, ushort width, int rad)
 {
-	Circles *newCircles = (Circles *) calloc(1, sizeof(Circles));
-	newCircles->count = 0;
-	newCircles->accumulator = allocateCircle(height, width, ratio);
-	return newCircles;
+	Acc *newAcc = (Acc *) calloc(1, sizeof(Acc));
+	newAcc->accumulator = allocateAcc(height, width, rad);
+	return newAcc;
 }
 
 // this converts a ppm image (with rgb) to pbm image (with 0,1)
@@ -285,21 +284,6 @@ double *preCalcCos(){
 		list[i] = cos(pi/180.0*i);
 	}
 	return(list);
-}
-
-Center *createCenter(int x, int y, int r){
-	Center *center = (Center *) calloc (1, sizeof(Center));
-	center->x = x;
-	center->y = y;
-	center->r = r;
-	return(center);
-}
-
-Box *createBox(int xCenter, int yCenter, int radius){
-	Box *box = (Box *) calloc (1, sizeof(Box));
-	box->xCenter = xCenter, box->yCenter = yCenter, box->radius = radius;
-	printf("\nDEBUG MESSAGE:\tx: %i y: %i r: %i\n", box->xCenter, box->yCenter, box->radius);
-	return(box);
 }
 
 Iris *createIris(int x, int y, int rad){

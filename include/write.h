@@ -9,7 +9,7 @@ void writePBM_PBM(ImgBin *img, char *filepath);
 
 void writePPM_PBM(Img *img, char *filepath);
 
-void drawBox(Img *img, char *filepath, Box *box);
+// void drawBox(Img *img, char *filepath, Box *box);
 
 void drawIris(Img *img, char *filepath, Iris *box);
 

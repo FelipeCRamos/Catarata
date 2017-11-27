@@ -280,107 +280,113 @@ int bigger(int num1, int num2){
 	return num1 > num2 ? num1 : num2;
 }
 
-Iris *houghMethod(ImgBin *img, Img *testImage, char *filename)
+Circles *houghMethod(ImgBin *img)
 {
-		
-		int rmax = (img->width + img->height - bigger(img->width,img->height))/4; // Just a test value
-		int rmin_iris = (img->width + img->height - bigger(img->width,img->height))/8;
-		int rmin = (img->width + img->height - bigger(img->width,img->height))/17; // Minimal ratio that we will use
-		// int rmin = 100, rmax = 600;
-		int a, b;
-		double pi = 3.14159;
+	// Declaring circle that we will store the biggest circles 
+	Circles *circles = (Circles *) calloc (1, sizeof(Circles));
+	circles->iris = (Iris *) calloc (15, sizeof(Iris));
+	
+	// circles->iris[1].x = 100;
+	// circles->iris[1].y = 150;
+	// circles->iris[1].rad = 80;
 
-		printf("DEBUG MESSAGE:\trmin: %i;\n", rmin);
-		printf("DEBUG MESSAGE:\trmin_iris: %i\n", rmin_iris);
-		printf("DEBUG MESSAGE:\trmax: %i;\n", rmax);
+	// printf("%i %i %i\n", circles->iris[1].x, circles->iris[1].y, circles->iris[1].rad);
 
-		Circles *acc = createCircles(img->height, img->width, rmax-rmin+1);
-		double *sin = preCalcSin();
-		double *cos = preCalcCos();
-		int total = img->height * img->width;
+	// Setting up some env variables
+	int rmax = (img->width + img->height - bigger(img->width,img->height))/4; 
+	int rmin_iris = (img->width + img->height - bigger(img->width,img->height))/8;
+	int rmin = (img->width + img->height - bigger(img->width,img->height))/17;
+	
+	int a, b;
+	double pi = 3.14159;
 
-		for(int y = 0; y < img->height; y++){
-			if(y % 50 == 0) printf("Processando linha %i de %i...\n", y+1, img->height);
+	// printf("DEBUG MESSAGE:\trmin: %i;\n", rmin);
+	// printf("DEBUG MESSAGE:\trmin_iris: %i\n", rmin_iris);
+	// printf("DEBUG MESSAGE:\trmax: %i;\n", rmax);
+
+	// Declaration of the Circles Matrix (a.k.a. accumulator)
+	Acc *acc = createAcc(img->height, img->width, rmax-rmin+1);
+
+	// Making some calculations to reduce program's runtime
+	double *sin = preCalcSin();
+	double *cos = preCalcCos();
+	int total = img->height * img->width;
+
+	for(int y = 0; y < img->height; y++) {
 			
-			for(int x = 0; x < img->width; x++){
-				if(img->pixels[y][x] == 0){
-					for(int r = rmin; r <= rmax; r+= 5){
-						for(int theta = 0; theta < 360; theta+= 15){
-							// real_tot = (r-rmin) * total;
-							a = x + r * cos[theta];	
-							b = y - r * sin[theta];
-							/* if 'a' and 'b' are into the limits
-							(bigger than 0 and smaller than height/width) */
-							if((a >= 0 && b >= 0) && (a < img->width && b < img->height)){
-								acc->accumulator[b][a][r-rmin]++;
-							}					
-						}
+		if(y % 50 == 0) printf("Processing line %i of %i...\n", y, img->height);
+			
+		for(int x = 0; x < img->width; x++) {
+			if(img->pixels[y][x] == 0) { // That means: If the pixel(y, x) is an edge...
+				for(int r = rmin; r <= rmax; r+= 5){
+					for(int theta = 0; theta < 360; theta+= 15){
+						a = x + r * cos[theta];	
+						b = y - r * sin[theta];
+						/* if 'a' and 'b' are into the limits
+						(bigger than 0 and smaller than height/width) */
+						if((a >= 0 && b >= 0) && (a < img->width && b < img->height)){
+							acc->accumulator[b][a][r-rmin]++;
+						}					
 					}
 				}
 			}
 		}
-		printf("\nAccumulator done, trying to guess the biggest circle...\n");
-		// Discover the biggest value on accumulator
-		int max = 0;
-		int max_iris = 0;
-		int max_c = 0;
-		for (int y = rmax; y < img->height; ++y)
-		{
-			for (int x = rmax; x < img->width; ++x){
-				for (int r = rmin_iris; r <= rmax; r += 2){
-					// printf("Trying to acess %i,%i,%i\n", i, j, k);
-					if (max == bigger(max, acc->accumulator[y][x][r-rmin])){
-						max_iris = r;
-					}
-					max = bigger(max, acc->accumulator[y][x][r-rmin]);
+	}
+	printf("\nAccumulator done, trying to guess the biggest circle...\n");
+	// Discover the biggest value on accumulator
+	int max = 0;
+	int max_iris = 0;//, xmax = 0, ymax = 0;
+	int max_c = 0;
 
-					// max_c++;
-					// max_iris += r;
+	int turn = 0;
 
-					// max_iris = bigger(max_iris, r);
+	for (int y = rmax; y < img->height; ++y)
+	{
+		for (int x = rmax; x < img->width; ++x){
+			for (int r = rmin_iris; r <= rmax; r += 2){
+				// printf("Trying to acess %i,%i,%i\n", i, j, k);
+				if (max != bigger(max, acc->accumulator[y][x][r-rmin])) {
+					// max_iris = r
+					circles->iris[turn].x = x, circles->iris[turn].y = y, circles->iris[turn].rad = r;
 				}
+				max = bigger(max, acc->accumulator[y][x][r-rmin]);
 			}
 		}
+	}
 
-		// max_iris = max_iris / max_c;
-		printf("\nDEBUG MESSAGE:\tmax: %i\nDEBUG MESSAGE:\tmax_iris: %i\n\n", max, max_iris);
+	// max_iris = max_iris / max_c;
+	// printf("\nDEBUG MESSAGE:\tmax: %i\nDEBUG MESSAGE:\tmax_iris: %i\n\n", max, max_iris);
 
-		// Calculates the center of the _circle_ by the mean of close range "maxes";
-		int counter = 0, xCenter = 0, yCenter = 0;
-		for(int y = rmax; y < img->height-rmax; y++){
-			for(int x = rmax; x < img->width-rmax; x++){
-				for(int r = rmin; r <= rmax; r += 1){
-					if(y < 0 || y < 0) printf("Deu valor negativo (%i, %i)\n", y, x);
-					if(acc->accumulator[y][x][r-rmin] >= (0.875 * max)){
-						// if(y < 0 || y < 0 || r-rmin < 0) printf("(%i, %i)(%i) -> %i\n", i, j, r-rmin, acc->accumulator[i][j][r-rmin]);
-						counter++;
-						yCenter += y;
-						xCenter += x;
-					}
-				}
-			}
-		}
-		counter++;
-		double ymax = yCenter/(double)counter;
-		double xmax = xCenter/(double)counter;
+	// // Calculates the center of the _circle_ by the mean of close range "maxes";
+	// int counter = 0, xCenter = 0, yCenter = 0;
+	// for(int y = rmax; y < img->height-rmax; y++){
+	// 	for(int x = rmax; x < img->width-rmax; x++){
+	// 		for(int r = rmin; r <= rmax; r += 1){
+	// 			if(y < 0 || y < 0) printf("Deu valor negativo (%i, %i)\n", y, x);
+	// 			if(acc->accumulator[y][x][r-rmin] >= (0.875 * max)){
+	// 				// if(y < 0 || y < 0 || r-rmin < 0) printf("(%i, %i)(%i) -> %i\n", i, j, r-rmin, acc->accumulator[i][j][r-rmin]);
+	// 				counter++;
+	// 				yCenter += y;
+	// 				xCenter += x;
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// counter++;
+	// double ymax = yCenter/(double)counter;
+	// double xmax = xCenter/(double)counter;
+	// printf("DEBUG MESSAGE:\tymax: %.3lf\nDEBUG MESSAGE:\txmax: %.3lf\n", ymax, xmax);
 
-		printf("DEBUG MESSAGE:\tymax: %.3lf\nDEBUG MESSAGE:\txmax: %.3lf\n", ymax, xmax);
-
-		Iris *iris = createIris(xmax, ymax, max_iris * 0.98);
-		// drawIris(testImage, "test/teste_iris.ppm", iris);
-		// segIris(testImage, "test/seg_iris.ppm", iris);
-
-		drawIris(testImage, outFilepath("test/", filename, "_iris", "pbm"), iris);
-		segIris(testImage, outFilepath("test/", filename, "_seg_iris", "pbm"), iris);
-
-		// free(iris);
+	// Iris *iris = createIris(xmax, ymax, max_iris * 0.98);
+	// // drawIris(testImage, "test/teste_iris.ppm", iris);
+	// // segIris(testImage, "test/seg_iris.ppm", iris);
 
 
-		// Box *box = createBox(xmax, ymax, max_iris);
-		// drawBox(testImage, "test/teste_box.ppm", box);
+	// drawIris(testImage, outFilepath("test/", filename, "_iris", "pbm"), circles->iris);
+	// segIris(testImage, outFilepath("test/", filename, "_seg_iris", "pbm"), circles->iris);
 
-
-	return(iris);
+	// free(iris);
+	return(circles);
 }
 
 
