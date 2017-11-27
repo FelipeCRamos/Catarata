@@ -265,6 +265,11 @@ void freeImgBin(ImgBin *img)
 	free(img);
 }
 
+// void freeIris(Iris *iris)
+// {
+// 	for ()
+// }
+
 double *preCalcSin(){
 	double pi = 3.14;
 	double *list = (double *) calloc (360, sizeof(double));

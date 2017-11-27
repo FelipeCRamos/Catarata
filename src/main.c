@@ -102,7 +102,26 @@ int main(int argc, char *argv[])
 	 * the threshold will be converted to 0.
 	 */
 	// Img *thresholdImg = otsuMethod(sobelImg);
-	Img *thresholdImg = threshold(sobelImg, 0.35*255);
+
+	/* OPTIMAL SETTINGS:
+
+		Catarata2.ppm -> threshold: 40%
+		Catarata.ppm -> threshold: 40%
+
+		Normal.ppm -> threshold: 23%
+		Normal2.ppm -> threshold: 50%
+	*/
+	printf("\n\n\nFILENAME: %s", filename);
+	int intensity = 0.40 * 255;
+	if (strcmp(filename, "Catarata.ppm") == 0) intensity = 0.40 * 255;
+	if (strcmp(filename, "Catarata2.ppm") == 0) intensity = 0.40 * 255;
+	if (strcmp(filename, "Normal.ppm") == 0) intensity = 0.23 * 255;
+	if (strcmp(filename, "Normal2.ppm") == 0) intensity = 0.50 * 255;
+	if (strcmp(filename, "F1.ppm") == 0) intensity = 0.50 * 255;
+	if (strcmp(filename, "F2.ppm") == 0) intensity = 0.23 * 255;
+
+	
+	Img *thresholdImg = threshold(sobelImg, intensity);
 
 	putchar('\n');
 
@@ -117,7 +136,7 @@ int main(int argc, char *argv[])
 	free(strippedThreshold);
 	
 	Img *tempOriginal = readPPM(filepath);
-	houghMethod(convertImg(thresholdImg), tempOriginal);
+	houghMethod(convertImg(thresholdImg), tempOriginal, filename);
 	// writePPM(tempOriginal, "test/original.ppm");
 
 	// Just a test to read/write pbm
@@ -126,6 +145,7 @@ int main(int argc, char *argv[])
 
 	// freeImgBin(pbmImage);
 	freeImg(thresholdImg);
+	freeImg(tempOriginal);
 	free(filepath);
 	free(filename);
 	free(format);

@@ -13,4 +13,6 @@ void drawBox(Img *img, char *filepath, Box *box);
 
 void drawIris(Img *img, char *filepath, Iris *box);
 
+void segIris(Img *img, char *filepath, Iris *box);
+
 #endif

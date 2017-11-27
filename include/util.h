@@ -105,6 +105,7 @@ void freeImgBin(ImgBin *img);
 // Funcs for Hough Method
 double *preCalcCos();
 double *preCalcSin();
+
 Center *createCenter(int x, int y, int r);
 Box *createBox(int xCenter, int yCenter, int radius);
 Iris *createIris(int x, int y, int rad);

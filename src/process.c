@@ -277,14 +277,10 @@ Img *otsuMethod(Img *originalImg)
 }
 
 int bigger(int num1, int num2){
-	if (num1 > num2){
-		return num1;
-	} else {
-		return num2;
-	}
+	return num1 > num2 ? num1 : num2;
 }
 
-Circles *houghMethod(ImgBin *img, Img *testImage)
+Iris *houghMethod(ImgBin *img, Img *testImage, char *filename)
 {
 		
 		int rmax = (img->width + img->height - bigger(img->width,img->height))/4; // Just a test value
@@ -304,12 +300,11 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 		int total = img->height * img->width;
 
 		for(int y = 0; y < img->height; y++){
-			/* Just a informer line */
 			if(y % 50 == 0) printf("Processando linha %i de %i...\n", y+1, img->height);
 			
 			for(int x = 0; x < img->width; x++){
 				if(img->pixels[y][x] == 0){
-					for(int r = rmin; r <= rmax; r+= 1){
+					for(int r = rmin; r <= rmax; r+= 5){
 						for(int theta = 0; theta < 360; theta+= 15){
 							// real_tot = (r-rmin) * total;
 							a = x + r * cos[theta];	
@@ -324,27 +319,37 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 				}
 			}
 		}
-		printf("\nAccumulator done, trying to discover max value...\n");
+		printf("\nAccumulator done, trying to guess the biggest circle...\n");
 		// Discover the biggest value on accumulator
 		int max = 0;
 		int max_iris = 0;
+		int max_c = 0;
 		for (int y = rmax; y < img->height; ++y)
 		{
 			for (int x = rmax; x < img->width; ++x){
 				for (int r = rmin_iris; r <= rmax; r += 2){
 					// printf("Trying to acess %i,%i,%i\n", i, j, k);
+					if (max == bigger(max, acc->accumulator[y][x][r-rmin])){
+						max_iris = r;
+					}
 					max = bigger(max, acc->accumulator[y][x][r-rmin]);
-					max_iris = bigger(max_iris, r);
+
+					// max_c++;
+					// max_iris += r;
+
+					// max_iris = bigger(max_iris, r);
 				}
 			}
 		}
-		printf("DEBUG MESSAGE:\tmax: %i\n", max);
+
+		// max_iris = max_iris / max_c;
+		printf("\nDEBUG MESSAGE:\tmax: %i\nDEBUG MESSAGE:\tmax_iris: %i\n\n", max, max_iris);
 
 		// Calculates the center of the _circle_ by the mean of close range "maxes";
 		int counter = 0, xCenter = 0, yCenter = 0;
 		for(int y = rmax; y < img->height-rmax; y++){
 			for(int x = rmax; x < img->width-rmax; x++){
-				for(int r = rmin; r <= rmax; r += 2){
+				for(int r = rmin; r <= rmax; r += 1){
 					if(y < 0 || y < 0) printf("Deu valor negativo (%i, %i)\n", y, x);
 					if(acc->accumulator[y][x][r-rmin] >= (0.875 * max)){
 						// if(y < 0 || y < 0 || r-rmin < 0) printf("(%i, %i)(%i) -> %i\n", i, j, r-rmin, acc->accumulator[i][j][r-rmin]);
@@ -361,14 +366,21 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 
 		printf("DEBUG MESSAGE:\tymax: %.3lf\nDEBUG MESSAGE:\txmax: %.3lf\n", ymax, xmax);
 
-		Iris *iris = createIris(xmax, ymax, max_iris);
-		drawIris(testImage, "test/teste_iris.ppm", iris);
+		Iris *iris = createIris(xmax, ymax, max_iris * 0.98);
+		// drawIris(testImage, "test/teste_iris.ppm", iris);
+		// segIris(testImage, "test/seg_iris.ppm", iris);
+
+		drawIris(testImage, outFilepath("test/", filename, "_iris", "pbm"), iris);
+		segIris(testImage, outFilepath("test/", filename, "_seg_iris", "pbm"), iris);
+
+		// free(iris);
+
 
 		// Box *box = createBox(xmax, ymax, max_iris);
 		// drawBox(testImage, "test/teste_box.ppm", box);
 
 
-	return(acc);
+	return(iris);
 }
 
 
