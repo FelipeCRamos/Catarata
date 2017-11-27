@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	free(strippedGrey);
 
 	// blur the image with the gaussian filter
-	Img *gaussImg = gaussianFilter(greyscaled, 1);
+	Img *gaussImg = gaussianFilter(greyscaled, 10);
 
 	char *outGauss = outFilepath(outDir, filename, "_gauss", format);
 	char *strippedGauss = stripFilepath(outGauss);
@@ -101,7 +101,8 @@ int main(int argc, char *argv[])
 	 * pixels bigger than the threshold will be converted to 255 and smaller than
 	 * the threshold will be converted to 0.
 	 */
-	Img *thresholdImg = otsuMethod(sobelImg);
+	// Img *thresholdImg = otsuMethod(sobelImg);
+	Img *thresholdImg = threshold(sobelImg, 0.35*255);
 
 	putchar('\n');
 

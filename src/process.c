@@ -312,7 +312,7 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 					for(int r = rmin; r <= rmax; r+= 1){
 						for(int theta = 0; theta < 360; theta+= 15){
 							// real_tot = (r-rmin) * total;
-							a = x - r * cos[theta];	
+							a = x + r * cos[theta];	
 							b = y - r * sin[theta];
 							/* if 'a' and 'b' are into the limits
 							(bigger than 0 and smaller than height/width) */
@@ -327,12 +327,14 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 		printf("\nAccumulator done, trying to discover max value...\n");
 		// Discover the biggest value on accumulator
 		int max = 0;
-		for (int y = 0; y < img->height; ++y)
+		int max_iris = 0;
+		for (int y = rmax; y < img->height; ++y)
 		{
-			for (int x = 0; x < img->width; ++x){
-				for (int r = rmin; r <= rmax; r += 2){
+			for (int x = rmax; x < img->width; ++x){
+				for (int r = rmin_iris; r <= rmax; r += 2){
 					// printf("Trying to acess %i,%i,%i\n", i, j, k);
 					max = bigger(max, acc->accumulator[y][x][r-rmin]);
+					max_iris = bigger(max_iris, r);
 				}
 			}
 		}
@@ -353,12 +355,17 @@ Circles *houghMethod(ImgBin *img, Img *testImage)
 				}
 			}
 		}
+		counter++;
 		double ymax = yCenter/(double)counter;
 		double xmax = xCenter/(double)counter;
 
 		printf("DEBUG MESSAGE:\tymax: %.3lf\nDEBUG MESSAGE:\txmax: %.3lf\n", ymax, xmax);
-		Box *box = createBox(ymax, xmax, rmin_iris);
-		drawBox(testImage, "test/teste_box.ppm", box);
+
+		Iris *iris = createIris(xmax, ymax, max_iris);
+		drawIris(testImage, "test/teste_iris.ppm", iris);
+
+		// Box *box = createBox(xmax, ymax, max_iris);
+		// drawBox(testImage, "test/teste_box.ppm", box);
 
 
 	return(acc);

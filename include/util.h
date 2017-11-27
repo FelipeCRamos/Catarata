@@ -71,6 +71,11 @@ typedef struct Box_t
 	int radius;
 } Box;
 
+typedef struct Iris_t
+{
+	int x, y, rad;
+} Iris;
+
 // eof
 
 void checkArgs(int argc, char *argv[], char *filepath, char *format, char *diagFile);
@@ -102,5 +107,6 @@ double *preCalcCos();
 double *preCalcSin();
 Center *createCenter(int x, int y, int r);
 Box *createBox(int xCenter, int yCenter, int radius);
+Iris *createIris(int x, int y, int rad);
 
 #endif

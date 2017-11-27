@@ -297,3 +297,9 @@ Box *createBox(int xCenter, int yCenter, int radius){
 	return(box);
 }
 
+Iris *createIris(int x, int y, int rad){
+	Iris *iris = (Iris *) calloc (1, sizeof(Iris));
+	iris->x = x, iris->y = y, iris->rad = rad;
+	return(iris);
+}
+
