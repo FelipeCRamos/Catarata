@@ -131,9 +131,21 @@ int main(int argc, char *argv[])
 	
 	Img *tempOriginal = readPPM(filepath);
 	Circles *circles = houghMethod(convertImg(thresholdImg));
+	double area = circles->iris[0].area;
 
 	drawIris(tempOriginal, outFilepath(outDir, filename, "_iris", "pbm"), circles->iris);
 	segIris(tempOriginal, outFilepath(outDir, filename, "_seg_iris", "pbm"), circles->iris);
+
+	Img *segIris = readPPM(outFilepath(outDir, filename, "_seg_iris", "pbm"));
+	Img *segIrisGrey = greyscale(segIris);
+	Img *segIrisGauss = gaussianFilter(segIrisGrey, 1);
+	Img *segThre = threshold(segIrisGauss, 0.33 * 255);
+	// Img *segThre = otsuMethod(segIrisGauss);
+	
+	int times = count(segThre, area);
+	printf("Comprometimento: %.2lf%\n\n", times/(double)area*100);
+
+	writePPM(segThre, "test/teste.ppm");
 
 	// writePPM(tempOriginal, "test/original.ppm");
 
@@ -142,6 +154,7 @@ int main(int argc, char *argv[])
 	// writePBM_PBM(pbmImage, "test/teste.pbm");
 
 	// freeImgBin(pbmImage);
+	free(circles);
 	freeImg(thresholdImg);
 	freeImg(tempOriginal);
 	free(filepath);

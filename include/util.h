@@ -61,6 +61,7 @@ typedef struct Accumulator_t
 typedef struct Iris_t
 {
 	int x, y, rad;
+	double area;
 } Iris;
 
 typedef struct Circles_t
@@ -99,5 +100,7 @@ double *preCalcCos();
 double *preCalcSin();
 
 Iris *createIris(int x, int y, int rad);
+
+int bigger(int num1, int num2);
 
 #endif

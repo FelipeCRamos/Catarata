@@ -69,7 +69,7 @@ void writePPM_PBM(Img *img, char *filepath)
 {
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
-	int pixel;
+	int pixel = 0;
 
 	if (!outImage) {
 		perror(filepath);
@@ -99,7 +99,6 @@ void writePPM_PBM(Img *img, char *filepath)
 void drawIris(Img *img, char *filepath, Iris *iris){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
-	int pixel;
 
 	if (!outImage) {
 		perror(filepath);
@@ -180,7 +179,6 @@ void drawIris(Img *img, char *filepath, Iris *iris){
 void segIris(Img *img, char *filepath, Iris *iris){
 	FILE *outImage;
 	outImage = fopen(filepath, "w");
-	int pixel;
 
 	if (!outImage) {
 		perror(filepath);

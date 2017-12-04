@@ -27,7 +27,7 @@ OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 all: build main 
 
 # Use "make main" to compile the main
-main: $(bindir)/main
+main: catarata
 
 # Use "make build" to build all the modules
 build: util read process write
@@ -45,8 +45,8 @@ process: $(objdir)/process.o
 write: $(objdir)/write.o
 
 # Compiles the main
-$(bindir)/main: $(srcdir)/main.c $(OBJS)
-	mkdir -p $(bindir)
+catarata: $(srcdir)/main.c $(OBJS)
+	# mkdir -p $(bindir)
 	$(CC) $(CFLAGS) $^ -o $@
 
 # Builds only the util module
