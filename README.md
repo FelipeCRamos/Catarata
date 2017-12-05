@@ -5,6 +5,10 @@ Alunos envolvidos no projeto:
 - Felipe C. Ramos Filho
 - João Pedro de A. Paula
 
+## Como usar:
+Para executar o programa basta clonar o repositório, ou baixar o arquivo `.zip`,
+e executar com `./catarata -i res/[nome da imagem] -f <arquivo de diagnóstico>`.
+
 ### Informações sobre o projeto
 Neste projeto, iremos implementar um programa em C para analisar 4 imagens (duas
  com catarata e duas sem catarata) e emitir um diagnóstico de cada uma.
