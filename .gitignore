@@ -1,6 +1,5 @@
 *.txt
-obj/
-bin/
-test/
-extra/
+obj
+bin
+test/*
 .gdb_history
