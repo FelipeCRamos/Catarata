@@ -47,27 +47,27 @@ write: $(objdir)/write.o
 # Compiles the main
 catarata: $(srcdir)/main.c $(OBJS)
 	# mkdir -p $(bindir)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ -lm
 
 # Builds only the util module
 $(objdir)/util.o: $(srcdir)/util.c $(incdir)/util.h
 	mkdir -p $(objdir)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -lm
 
 # Builds only the reading module (use "make read")
 $(objdir)/read.o: $(srcdir)/read.c $(incdir)/read.h $(incdir)/util.h
 	mkdir -p $(objdir)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -lm
 
 # Builds only the processing module (use "make process")
 $(objdir)/process.o: $(srcdir)/process.c $(incdir)/process.h $(incdir)/util.h
 	mkdir -p $(objdir)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -lm
 
 # Builds only the writing module (use "make write")
 $(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/util.h
 	mkdir -p $(objdir)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -lm
 
 # Removes all objects
 cleanobj:
