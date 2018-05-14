@@ -7,14 +7,15 @@
 #include <string.h>
 #include <math.h>
 
-
-#define DEBUGGER(fmt, ...)																									 \
-	do { 																																			 \
-		if (DEBUG) {																														 \
-			fprintf(stderr, "\e[1m\x1b[34mDEBUG\x1b[0m\e[0m \e[1m%s:%i:%s():\e[0m ", __FILE__, __LINE__, __func__); 	 \
-			fprintf(stderr, fmt,	__VA_ARGS__); 																	 \
-		} 																																			 \
-	} while (0)
+#define DEBUGGER(fmt, ...)                                                                                    \
+  do                                                                                                          \
+  {                                                                                                           \
+    if (DEBUG)                                                                                                \
+    {                                                                                                         \
+      fprintf(stderr, "\e[1m\x1b[34mDEBUG\x1b[0m\e[0m \e[1m%s:%i:%s():\e[0m ", __FILE__, __LINE__, __func__); \
+      fprintf(stderr, fmt, __VA_ARGS__);                                                                      \
+    }                                                                                                         \
+  } while (0)
 
 #define MAX_RGB 255
 #define ushort unsigned short
@@ -23,32 +24,32 @@
 
 typedef struct Pixel_t
 {
-	uchar r; // red
-	uchar g; // green
-	uchar b; // blue
+  uchar r; // red
+  uchar g; // green
+  uchar b; // blue
 } Pixel;
 
 typedef struct Img_t
 {
-	// char filepath[50];
-	uchar max_rgb;
-	ushort height;
-	ushort width;
-	Pixel **pixels;
+  // char filepath[50];
+  uchar max_rgb;
+  ushort height;
+  ushort width;
+  Pixel **pixels;
 } Img;
 
 typedef struct ImgBin_t
 {
-	ushort height;
-	ushort width;
-	bool **pixels;
+  ushort height;
+  ushort width;
+  bool **pixels;
 } ImgBin;
 
 // Exclusives to Hough Method
 typedef struct Accumulator_t
 {
-	// int count;
-	int ***accumulator;
+  // int count;
+  int ***accumulator;
 } Acc;
 
 /* 
@@ -60,13 +61,13 @@ typedef struct Accumulator_t
 
 typedef struct Iris_t
 {
-	int x, y, rad;
-	double area;
+  int x, y, rad;
+  double area;
 } Iris;
 
 typedef struct Circles_t
 {
-	Iris *iris;
+  Iris *iris;
 } Circles;
 
 // eof
