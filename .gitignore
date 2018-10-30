@@ -3,3 +3,4 @@ obj
 bin
 test/*
 .gdb_history
+.DS_Store

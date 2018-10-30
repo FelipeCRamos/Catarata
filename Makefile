@@ -3,6 +3,7 @@
 # Creators:
 #		- João Pedro de Amorim Paula
 #		- Felipe C. Ramos Filho
+PROJ_NAME = catarata
 
 # Makefile conventions
 SHELL = /bin/sh
@@ -27,7 +28,7 @@ OBJS = $(addprefix $(objdir)/,read.o process.o write.o util.o)
 all: build main 
 
 # Use "make main" to compile the main
-main: catarata
+main: $(PROJ_NAME)
 
 # Use "make build" to build all the modules
 build: util read process write
@@ -71,11 +72,12 @@ $(objdir)/write.o: $(srcdir)/write.c $(incdir)/write.h $(incdir)/util.h
 
 # Removes all objects
 cleanobj:
-	$(RM) $(objdir)/*.o
+	$(RM) -rf $(objdir)
 
 # Removes all executables
 cleanbin:
-	$(RM) $(bindir)/*
+	$(RM) -rf $(bindir)
+	$(RM) $(PROJ_NAME)
 
 # Removes all images
 cleanimg:
