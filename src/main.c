@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
   free(outGauss);
   free(strippedGauss);
 
+  /* outro comentario que nao serve de nada */
+
   // apply Sobel's filter to enhance the edges
   Img *sobelImg = sobelFilter(gaussImg, 1);
 
@@ -106,7 +108,7 @@ int main(int argc, char *argv[])
   free(outSobel);
   free(strippedSobel);
 
-  /** 
+  /**
 	 * Apply threshold to sobelImg with intensity calculated through Otsu's Method
 	 * pixels bigger than the threshold will be converted to 255 and smaller than
 	 * the threshold will be converted to 0.
@@ -152,6 +154,7 @@ int main(int argc, char *argv[])
 
   drawIris(tempOriginal, outFilepath(outDir, filename, "_iris", "pbm"), circles->iris);
   segIris(tempOriginal, outFilepath(outDir, filename, "_seg_iris", "pbm"), circles->iris);
+  /* comentario  que nao server de nada */
 
   Img *segIris = readPPM(outFilepath(outDir, filename, "_seg_iris", "pbm"));
   Img *segIrisGrey = greyscale(segIris);
